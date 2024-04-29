@@ -1,0 +1,163 @@
+html {
+  padding: 0;
+  margin: 0;
+}
+body{
+  background-color: #fff;
+}
+h1, p {
+  text-align: center;
+}
+.home-header {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 1) 85%),radial-gradient(ellipse at top left, #8cff45c6, transparent 50%),radial-gradient(ellipse at top right, #ffdb88e5, transparent 50%),radial-gradient(ellipse at center right, rgba(232, 210, 112, 0.91), transparent 50%),radial-gradient(ellipse at center left, rgba(58, 158, 234, 0.929), transparent 50%);
+  height: 90vh;
+}
+.content {
+  background-color: #fff;
+}
+.bg-happyyellow {
+  background-color: #FFD166 !important;
+}
+#navbar-wraper-div {
+  margin-left: 3vw;
+}
+#navbarNav {
+  margin-left: 4vw;
+}
+.nav-item {
+  margin-left: 1vw;
+}
+.nav-link {
+  font-size: 1rem;
+}
+.col-12 {
+  padding: 20px !important;
+}
+.col-xxl-4 {
+  padding: 20px !important;
+}
+.list-unstyled > * {
+  text-decoration: none;
+}
+.list-unstyled > * > * {
+  color:black;
+  text-decoration: none;
+}
+.bg-radial-gradient {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 1) 85%),radial-gradient(ellipse at top left, rgba(13,110,253, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgba(255,228,132, 0.5), transparent 50%),radial-gradient(ellipse at center right, rgba(112.520718,44.062154,249.437846, 0.5), transparent 50%),radial-gradient(ellipse at center left, rgba(214,51,132, 0.5), transparent 50%);
+}
+
+.steps-list > li::marker {
+  content: "»>  ";
+  font-size: 18px;
+  color: hsl(250 50% 50%);
+  letter-spacing: -3px;
+}
+
+.steps-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.steps-dropdown-content {
+  transform: translate(-100%, -20px);
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  max-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.steps-dropdown:hover .steps-dropdown-content {
+  display: block;
+}
+
+
+.top-30 {
+  top: 30% !important
+}
+
+
+.img-full-y {
+  height: 100%;
+  width: auto;
+}
+
+.img-full-x {
+  height: auto;
+  width: 100%;
+}
+
+/* remove icon from list item */
+.none-marker {
+  list-style-type: none;
+}
+
+/* img size to 16x16 */
+.img-16x16 {
+  height: 16px;
+  width: 16px;
+}
+
+/* img size to 32x32 */
+.img-32x32 {
+  height: 32px;
+  width: 32px;
+}
+
+
+/* for responsive text in the steps lists */
+
+@media (max-width: 991px) {
+  .steps-dropdown-content {
+    max-width: 170px;
+    font-size: 15px;
+    transform: translate(30%, -50%);
+  }
+}
+
+@media (max-width: 768px) {
+  .steps-dropdown-content {
+    max-width: 130px;
+    font-size: 13px;
+    transform: translate(20%, -50%);
+  }
+}
+
+@media (max-width: 576px) {
+  .steps-dropdown-content {
+    position: relative;
+    max-width: 170px;
+    font-size: 12px;
+    transform: translate(-50%, 0);
+    left: 50%;
+  }
+}
+
+
+/*for responsive navbar text */
+
+@media (max-width: 1399px) {
+  #email-us-container {
+    justify-content: flex-start !important;
+  }
+  #email-us-container > * {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+}
+@media (min-width: 1400px) {
+  #email-us-container {
+    justify-content: flex-end !important;
+  }
+  #email-us-container > * {
+    margin-left: 3rem !important;
+    margin-right: 3rem !important;
+    padding-right: 3rem !important;
+    padding-left: 3rem !important;
+  }
+}

@@ -1,0 +1,57 @@
+{% extends "layout.html" %} {% set page_title="Home" %}
+
+{% block heading %}
+<div class="position-relative top-50 start-50 translate-middle-x">
+  <h1 class="fs-1">Brunswick Field Day</h1>
+</div><!--makes a centered div-->
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-5 mt-5">
+  <h1 class="mb-5 text-center fs-1">asdhfl</h1>
+  <!--begining of math row-->
+  <div class="row mb-5 pb-5">
+    <div class="col-lg-1 col-2"></div><!--for spacing-->
+
+    <!--begining of math photo col-->
+    <div class="col-lg-5 d-none d-lg-block">
+      <img class="rounded img-full-x" src="{{url_for('static', filename='GroupOnBridge.jpg')}}">
+    </div><!--end of math photo col-->
+
+    <!--begining of math text col-->
+    <div class="col-lg-5 col-8">
+      <p class="fs-4 text-start">
+        jskdal ahsjdklf huioo hajskldf hwej
+      </p>
+    </div><!--end of math text-->
+
+    <div class="col-lg-1 col-2"></div><!--for spacing-->
+  </div> <!--end of math row-->
+
+
+
+  <h1 class="pt-5 my-5 text-center fs-1">shadjkfle</h1>
+  <div class="row mb-5 pb-5">
+    <div class="col-lg-1 col-2"></div><!--for spacing-->
+
+    <!--begining of coding text col-->
+    <div class="col-lg-5 col-8">
+      <p class="fs-4 text-end">
+        ahsjkdfasdfasdf adhjfk hjaweu ansmjdk asjdlfh hweu hajklsd
+      </p>
+    </div><!--end of coding text-->
+
+
+    <!--begining of coding photo col-->
+    <div class="col-lg-5 d-none d-lg-block">
+      <img class="rounded img-full-x" src="{{url_for('static', filename='Waterfall.jpg')}}">
+    </div><!--end of coding photo col-->
+
+    <div class="col-lg-1 col-2"></div><!--for spacing-->
+  </div> <!--end of coding row-->
+
+
+</div><!--end of fluid container-->
+{% endblock %}
+
+
