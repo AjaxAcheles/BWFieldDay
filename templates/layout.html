@@ -34,8 +34,11 @@
         </div><!--#navbarNav-->
       </div><!--container-fluid-->
     </nav><!--end of navbar!-->
-
+    {% if page_title == "Home" %}
     <div class="home-header pb-5">
+    {% else %}
+    <div class="header pb-5">
+    {% endif %}
         {% block heading %} {% endblock %}
     </div><!--end of header block-->
 
