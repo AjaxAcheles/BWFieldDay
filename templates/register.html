@@ -1,0 +1,145 @@
+{% extends "layout.html" %} {% set page_title="Registration" %}
+
+{% block heading %}
+    <h1>BW Field Day Registration</h1>
+    <p>Please fill out the form below to register for BW Field Day.</p>
+{% endblock %}
+
+{% block content %}
+    <form class="text-center" action="/register" method="POST">
+        <div>
+            <label for="parent-name">Parent Name:</label>
+            <input type="text" id="parent-name" name="parent-name" required>
+        </div>
+        <div>
+            <label for="parent-email">Parent Email:</label>
+            <input type="email" id="parent-email" name="parent-email" required>
+        </div>
+        <div>
+            <label for="parent-phone-number">Parent Phone Number:</label>
+            <input type="tel" id="parent-phone-number" name="parent-phone-number" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+        </div>
+        <br>
+        <div>
+            <label for="number-of-children">Number of Children:</label>
+            <input type="number" id="number-of-children" name="number-of-children" min="1" max="10" value=1 required>
+        </div>
+
+        <h2>Children Information</h2>
+        <div id="children-info-container">
+            <!--.children-info will be duplicated/removed when #number-of-children is changed -->
+            <div class="children-info" id="child-1-info">
+                <div>
+                    <label for="child-1-name">Child Name</label>
+                    <input type="text" id="child-1-name" name="child-1-name" required>
+                </div>
+                <div>
+                    <label for="child-1-age">Child Age</label>
+                    <input type="text" id="child-1-age" name="child-1-age" required>
+                </div>
+                <div>
+                    <label for="child-1-t-shirt-option">Does this child want a t-shirt?</label>
+                    <select class="child-t-shirt-option" data-childNumber="1" name="child-1-t-shirt-option" id="child-1-t-shirt-option">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <div id="child-1-t-shirt-size-container">
+                    <label for="child-1-t-shirt-size">T-Shirt Size</label>
+                    <select name="child-1-t-shirt-size" id="child-1-t-shirt-size">
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+<!--parent needs t-shirt, child needs option to not get t-shirt-->
+    <script>
+        // after detecting a change in the value of #number-of-children, set the variable numChildren to the new value
+        var numChildren = $("#number-of-children").val();
+
+        function onAddChild () { 
+            var newNumChildren = $("#number-of-children").val();
+            numChildren = Number(numChildren);
+            newNumChildren = Number(newNumChildren);
+
+            console.log(numChildren, newNumChildren, numChildren + 3);
+
+            // if numChildren has decreased
+            if (newNumChildren < numChildren) {
+                // define a list, named childrenDivs, of the direct children of #children-info (they should be divs)
+                var childrenDivs = $(".children-info");
+                // find the last id in childrenDivs and use jquery to remove the div with the same id
+                // keep doing so until the number items in childrenDivs are the same as numChildren
+                for (index = numChildren; index > newNumChildren; index--) {
+                    var id = `#child-${index}-info`;
+                    $(id).remove();
+                }
+            } // if numChildren has increased
+            else if (newNumChildren > numChildren) {
+                // add all the new children 
+                for (index = numChildren + 1; index < newNumChildren + 1; index++) {
+                    var childDiv = `
+                    <div class="children-info" id="child-${index}-info">
+                        <div>
+                            <label for="child-${index}-name">Child Name</label>
+                            <input type="text" id="child-${index}-name" name="child-${index}-name" required>
+                        </div>
+                        <div>
+                            <label for="child-${index}-age">Child Age</label>
+                            <input type="text" id="child-${index}-age" name="child-${index}-age" required>
+                        </div>
+                        <div>
+                            <label for="child-${index}-t-shirt-option">Does this child want a t-shirt?</label>
+                            <select name="child-${index}-t-shirt-option" id="child-${index}-t-shirt-option">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                        <div id="child-${index}-t-shirt-size-container">
+                            <label for="child-${index}-t-shirt-size">T-Shirt Size</label>
+                            <select name="child-${index}-t-shirt-size" id="child-${index}-t-shirt-size">
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                            </select>
+                        </div>
+                    </div>
+                    `;
+                    $("#children-info-container").append(childDiv);
+                }
+            }
+            else {
+                void 0;
+            }
+
+            numChildren = newNumChildren;
+            delete newNumChildren;
+        }
+
+        // if any .t-shirt-choice is true, then remove .t-shirt
+        function onChangeTShirtOption (event) {
+            var changed = event.currentTarget;
+            if (changed.value == "true") {
+                $(`#child-${changed.dataset.childnumber}-t-shirt-size-container`).show()
+            }
+            else if (changed.value == "false") {
+                $(`#child-${changed.dataset.childnumber}-t-shirt-size-container`).hide()
+            }
+        }
+
+
+        $("#number-of-children").change(onAddChild);
+        $(".child-t-shirt-option").change(onChangeTShirtOption);
+    </script>
+{% endblock %}

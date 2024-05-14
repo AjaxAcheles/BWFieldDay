@@ -15,7 +15,7 @@ def create_parent_info_table():
                     parent_name TEXT, 
                     parent_email TEXT,
                     password TEXT, 
-                    parent_phone_number TEXT, 
+                    parent_phone_number INTEGER, 
                     number_of_children INTEGER 
                 )""")
     connection.commit()
@@ -36,18 +36,18 @@ def create_child_info_table():
     connection.commit()
 
 
-def get_parent_data():
+def get_parent_info():
     connection = get_db()
     sql = connection.cursor()
     return sql.execute("SELECT * FROM parent_info").fetchall()
 
-def get_child_data():
+def get_child_info():
     connection = get_db()
     sql = connection.cursor()
     return sql.execute("SELECT * FROM child_info").fetchall()
-    
 
 
-#parent name, parent email, parent phone number, number of children, password
-#for each child, (child name, child age, child t-shirt size)
+
+#parent name, parent email, parent phone number, number of children, password, parent t-shirt size if any
+#for each child, (child name, child age, child t-shirt size if t-shirt)
 #if parent not live and homeschool in brunswick county, then parent can not sign up

@@ -9,9 +9,10 @@ from flask import (
     g
 )
 from fetch_data import *
-
+from auth import *
 
 app = Flask(__name__)
+app.register_blueprint(auth_bp)
 
 with app.app_context():
     create_parent_info_table()
@@ -23,15 +24,10 @@ app.secret_key = "NJMFTGEWTRIOPHGFVFXGDCljkfgtre45tiophufhgyju435u8o9324i09dfhku
 def home():
     return render_template("home.html")
 
-@app.route("/register")
-def register():
-    return render_template("home.html")
-
 @app.route("/edit_info")
 def edit_info():
-    parent_data = get_parent_data()
-    child_data = get_child_data()
-    return parent_data, child_data
+    parent_data = get_parent_info()
+    return parent_data
 
 @app.route("/volunteering")
 def volunteering():
