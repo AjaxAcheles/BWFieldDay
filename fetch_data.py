@@ -14,9 +14,10 @@ def create_parent_info_table():
                     parent_id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     parent_name TEXT, 
                     parent_email TEXT,
-                    password TEXT, 
                     parent_phone_number INTEGER, 
-                    number_of_children INTEGER 
+                    parent_t_shirt_size TEXT,
+                    number_of_children INTEGER, 
+                    additional_parent_name TEXT
                 )""")
     connection.commit()
 
