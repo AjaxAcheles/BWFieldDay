@@ -7,5 +7,5 @@ def login_required(original_function):
         if session.get('logged_in'):
             return original_function(*args, **kwargs)
         else:
-            return redirect(url_for('auth.login'))
+            return render_template("login.html", error="You are not logged in")
     return decorated_function
