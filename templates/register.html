@@ -6,18 +6,36 @@
 {% endblock %}
 
 {% block content %}
+    <!-- The popup div -->
+    <div class="modal fade" id="residencyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="residencyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="residencyModalLabel">Brunswick County Residency Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <p>By clicking "Yes", you confirm that you live in Brunswick County.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="residency-no-button" type="button" class="btn btn-secondary"><a class="text-white link-underline-opacity-0" href="{{url_for('home')}}">No</a></button>
+                    <button id="residency-yes-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- the form -->
     <form class="text-center" action="/register" method="POST">
         <div>
             <label for="parent-1-name">Parent Name:</label>
-            <input type="text" id="parent-1-name" name="parent-1-name" required>
+            <input type="text" id="parent-1-name" name="parent-1-name" >
         </div>
         <div>
             <label for="parent-email">Parent Email:</label>
-            <input type="email" id="parent-email" name="parent-email" required>
+            <input type="email" id="parent-email" name="parent-email" >
         </div>
         <div>
             <label for="parent-phone-number">Parent Phone Number:</label>
-            <input type="tel" id="parent-phone-number" name="parent-phone-number" required>
+            <input type="tel" id="parent-phone-number" name="parent-phone-number" >
         </div>
         <div>
             <label for="parent-1-t-shirt-option">Do you want a t-shirt?</label>
@@ -46,7 +64,7 @@
         <div id="parent-2-info-container" style="display: none;">
             <div>
                 <label for="parent-1-name">Parent Name:</label>
-                <input type="text" id="parent-1-name" name="parent-1-name" required>
+                <input type="text" id="parent-1-name" name="parent-1-name" >
             </div>
             <div>
                 <label for="parent-2-t-shirt-option">Do you want a t-shirt?</label>
@@ -67,42 +85,23 @@
 
         <div>
             <label for="number-of-children">Number of Children:</label>
-            <input type="number" id="number-of-children" name="number-of-children" min="1" max="10" value=1 required>
+            <input type="number" id="number-of-children" name="number-of-children" min="1" max="10" value=0 >
         </div>
 
         <h2>Children Information</h2>
         <div id="children-info-container">
-            <!--.children-info will be duplicated/removed when #number-of-children is changed -->
-            <div class="children-info" id="child-1-info">
-                <div>
-                    <label for="child-1-name">Child Name</label>
-                    <input type="text" id="child-1-name" name="child-1-name" required>
-                </div>
-                <div>
-                    <label for="child-1-age">Child Age</label>
-                    <input type="text" id="child-1-age" name="child-1-age" required>
-                </div>
-                <div>
-                    <label for="child-1-t-shirt-option">Does this child want a t-shirt?</label>
-                    <select class="child-t-shirt-option" data-childNumber="1" name="child-1-t-shirt-option" id="child-1-t-shirt-option">
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                </div>
-                <div id="child-1-t-shirt-size-container">
-                    <label for="child-1-t-shirt-size">T-Shirt Size</label>
-                    <select name="child-1-t-shirt-size" id="child-1-t-shirt-size">
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                    </select>
-                </div>
-            </div>
         </div>
 
         <button type="submit">Register</button>
     </form>
 <!--parent needs t-shirt, child needs option to not get t-shirt-->
     <script>
+
+        // when the page loads, show the pop up.
+        $(document).ready(function() {
+            $('#residencyModal').modal('show');
+        });
+
         // after detecting a change in the value of #number-of-children, set the variable numChildren to the new value
         var numChildren = $("#number-of-children").val();
 
@@ -110,8 +109,6 @@
             var newNumChildren = $("#number-of-children").val();
             numChildren = Number(numChildren);
             newNumChildren = Number(newNumChildren);
-
-            console.log(numChildren, newNumChildren, numChildren + 3);
 
             // if numChildren has decreased
             if (newNumChildren < numChildren) {
@@ -131,15 +128,15 @@
                     <div class="children-info" id="child-${index}-info">
                         <div>
                             <label for="child-${index}-name">Child Name</label>
-                            <input type="text" id="child-${index}-name" name="child-${index}-name" required>
+                            <input type="text" id="child-${index}-name" name="child-${index}-name" >
                         </div>
                         <div>
                             <label for="child-${index}-age">Child Age</label>
-                            <input type="text" id="child-${index}-age" name="child-${index}-age" required>
+                            <input type="text" id="child-${index}-age" name="child-${index}-age" >
                         </div>
                         <div>
                             <label for="child-${index}-t-shirt-option">Does this child want a t-shirt?</label>
-                            <select name="child-${index}-t-shirt-option" id="child-${index}-t-shirt-option">
+                            <select class="child-t-shirt-option" data-childNumber="${index}" name="child-${index}-t-shirt-option" id="child-${index}-t-shirt-option">
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
