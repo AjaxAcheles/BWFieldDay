@@ -8,8 +8,8 @@
 {% block content %}
     <form class="text-center" action="/register" method="POST">
         <div>
-            <label for="parent-name">Parent Name:</label>
-            <input type="text" id="parent-name" name="parent-name" required>
+            <label for="parent-1-name">Parent Name:</label>
+            <input type="text" id="parent-1-name" name="parent-1-name" required>
         </div>
         <div>
             <label for="parent-email">Parent Email:</label>
@@ -19,7 +19,52 @@
             <label for="parent-phone-number">Parent Phone Number:</label>
             <input type="tel" id="parent-phone-number" name="parent-phone-number" required>
         </div>
+        <div>
+            <label for="parent-1-t-shirt-option">Do you want a t-shirt?</label>
+            <select class="parent-t-shirt-option" data-parentNumber="1" name="parent-1-t-shirt-option" id="parent-1-t-shirt-option">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+            </select>
+        </div>
+        <div id="parent-1-t-shirt-size-container" style="display: none;">
+            <label for="parent-1-t-shirt-size">T-Shirt Size</label>
+            <select name="parent-1-t-shirt-size" id="parent-1-t-shirt-size">
+                <option value="M">M</option>
+                <option value="L">L</option>
+            </select>
+        </div>
+
         <br>
+
+        <div>
+            <label for="is-parent-2">Is there a second parent?</label>
+            <select name="is-parent-2" id="is-parent-2">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+            </select>
+        </div>
+        <div id="parent-2-info-container" style="display: none;">
+            <div>
+                <label for="parent-1-name">Parent Name:</label>
+                <input type="text" id="parent-1-name" name="parent-1-name" required>
+            </div>
+            <div>
+                <label for="parent-2-t-shirt-option">Do you want a t-shirt?</label>
+                <select class="parent-t-shirt-option" data-parentNumber="2" name="parent-2-t-shirt-option" id="parent-2-t-shirt-option">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+            <div id="parent-2-t-shirt-size-container" style="display: none;">
+                <label for="parent-2-t-shirt-size">T-Shirt Size</label>
+                <select name="parent-2-t-shirt-size" id="parent-2-t-shirt-size">
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                </select>
+            </div>
+        </div>
+        <br>
+
         <div>
             <label for="number-of-children">Number of Children:</label>
             <input type="number" id="number-of-children" name="number-of-children" min="1" max="10" value=1 required>
@@ -120,7 +165,7 @@
         }
 
         // if any .t-shirt-choice is true, then remove .t-shirt
-        function onChangeTShirtOption (event) {
+        function onChangeChildTShirtOption (event) {
             var changed = event.currentTarget;
             if (changed.value == "true") {
                 $(`#child-${changed.dataset.childnumber}-t-shirt-size-container`).show()
@@ -130,8 +175,30 @@
             }
         }
 
+        function onChangeParentTShirtOption(event) {
+            var changed = event.currentTarget;
+            if (changed.value == "true") {
+                $(`#parent-${changed.dataset.parentnumber}-t-shirt-size-container`).show()
+            }
+            else if (changed.value == "false") {
+                $(`#parent-${changed.dataset.parentnumber}-t-shirt-size-container`).hide()
+            }
+        }
+
+        function onAddNewParent(event) {
+            var changed = event.currentTarget;
+            if (changed.value == "true") {
+                $(`#parent-2-info-container`).show()
+            }
+            else if (changed.value == "false") {
+                $(`#parent-2-info-container`).hide()
+            }
+        }
+
 
         $("#number-of-children").change(onAddChild);
-        $(".child-t-shirt-option").change(onChangeTShirtOption);
+        $(".child-t-shirt-option").change(onChangeChildTShirtOption);
+        $(".parent-t-shirt-option").change(onChangeParentTShirtOption);
+        $("#is-parent-2").change(onAddNewParent);
     </script>
 {% endblock %}

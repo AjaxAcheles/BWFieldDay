@@ -12,12 +12,13 @@ def create_parent_info_table():
                 CREATE TABLE IF NOT EXISTS
                 parent_info (
                     parent_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    parent_name TEXT, 
+                    parent_1_name TEXT, 
                     parent_email TEXT,
                     parent_phone_number INTEGER, 
-                    parent_t_shirt_size TEXT,
+                    parent_1_t_shirt_size TEXT,
                     number_of_children INTEGER, 
-                    additional_parent_name TEXT
+                    parent_2_name TEXT,
+                    parent_2_t_shirt_size TEXT
                 )""")
     connection.commit()
 
@@ -49,6 +50,6 @@ def get_child_info():
 
 
 
-#parent name, parent email, parent phone number, number of children, password, parent t-shirt size if any
+#parent name, parent email, parent phone number, number of children, parent t-shirt size if any
 #for each child, (child name, child age, child t-shirt size if t-shirt)
 #if parent not live and homeschool in brunswick county, then parent can not sign up
