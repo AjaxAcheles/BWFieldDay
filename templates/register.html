@@ -35,7 +35,7 @@
         </div>
         <div>
             <label for="parent-phone-number">Parent Phone Number:</label>
-            <input type="tel" id="parent-phone-number" name="parent-phone-number" >
+            <input type="number" id="parent-phone-number" name="parent-phone-number" >
         </div>
         <div>
             <label for="parent-1-t-shirt-option">Do you want a t-shirt?</label>
@@ -47,6 +47,7 @@
         <div id="parent-1-t-shirt-size-container" style="display: none;">
             <label for="parent-1-t-shirt-size">T-Shirt Size</label>
             <select name="parent-1-t-shirt-size" id="parent-1-t-shirt-size">
+                <option class="null-option" value="null" disabled selected>--Select an option--</option>
                 <option value="M">M</option>
                 <option value="L">L</option>
             </select>
@@ -57,17 +58,17 @@
         <div>
             <label for="is-parent-2">Is there a second parent?</label>
             <select name="is-parent-2" id="is-parent-2">
-                <option value="false">No</option>
+                <option value="false" selected>No</option>
                 <option value="true">Yes</option>
             </select>
         </div>
         <div id="parent-2-info-container" style="display: none;">
             <div>
-                <label for="parent-1-name">Parent Name:</label>
-                <input type="text" id="parent-1-name" name="parent-1-name" >
+                <label for="parent-2-name">Parent 2 Name:</label>
+                <input type="text" id="parent-2-name" name="parent-2-name" >
             </div>
             <div>
-                <label for="parent-2-t-shirt-option">Do you want a t-shirt?</label>
+                <label for="parent-2-t-shirt-option">Do they want a t-shirt?</label>
                 <select class="parent-t-shirt-option" data-parentNumber="2" name="parent-2-t-shirt-option" id="parent-2-t-shirt-option">
                     <option value="false">No</option>
                     <option value="true">Yes</option>
@@ -76,6 +77,7 @@
             <div id="parent-2-t-shirt-size-container" style="display: none;">
                 <label for="parent-2-t-shirt-size">T-Shirt Size</label>
                 <select name="parent-2-t-shirt-size" id="parent-2-t-shirt-size">
+                    <option value="null" disabled selected>--Select an option--</option>
                     <option value="M">M</option>
                     <option value="L">L</option>
                 </select>
@@ -132,7 +134,7 @@
                         </div>
                         <div>
                             <label for="child-${index}-age">Child Age</label>
-                            <input type="text" id="child-${index}-age" name="child-${index}-age" >
+                            <input type="number" id="child-${index}-age" name="child-${index}-age" >
                         </div>
                         <div>
                             <label for="child-${index}-t-shirt-option">Does this child want a t-shirt?</label>
@@ -144,6 +146,7 @@
                         <div id="child-${index}-t-shirt-size-container">
                             <label for="child-${index}-t-shirt-size">T-Shirt Size</label>
                             <select name="child-${index}-t-shirt-size" id="child-${index}-t-shirt-size">
+                                <option value="null" disabled selected>--Select an option--</option>
                                 <option value="M">M</option>
                                 <option value="L">L</option>
                             </select>
@@ -162,40 +165,40 @@
         }
 
         // if any .t-shirt-choice is true, then remove .t-shirt
-        function onChangeChildTShirtOption (event) {
+        function onChangeChildTShirtOption(event) {
+            console.log("change child t-shirt option");
             var changed = event.currentTarget;
             if (changed.value == "true") {
-                $(`#child-${changed.dataset.childnumber}-t-shirt-size-container`).show()
+                $(`#child-${changed.dataset.childnumber}-t-shirt-size-container`).show();
             }
             else if (changed.value == "false") {
-                $(`#child-${changed.dataset.childnumber}-t-shirt-size-container`).hide()
+                $(`#child-${changed.dataset.childnumber}-t-shirt-size-container`).hide();
             }
         }
 
         function onChangeParentTShirtOption(event) {
             var changed = event.currentTarget;
             if (changed.value == "true") {
-                $(`#parent-${changed.dataset.parentnumber}-t-shirt-size-container`).show()
+                $(`#parent-${changed.dataset.parentnumber}-t-shirt-size-container`).show();
             }
             else if (changed.value == "false") {
-                $(`#parent-${changed.dataset.parentnumber}-t-shirt-size-container`).hide()
+                $(`#parent-${changed.dataset.parentnumber}-t-shirt-size-container`).hide();
             }
         }
 
         function onAddNewParent(event) {
             var changed = event.currentTarget;
             if (changed.value == "true") {
-                $(`#parent-2-info-container`).show()
+                $(`#parent-2-info-container`).show();
             }
             else if (changed.value == "false") {
-                $(`#parent-2-info-container`).hide()
+                $(`#parent-2-info-container`).hide();
             }
         }
-
 
         $("#number-of-children").change(onAddChild);
         $(".child-t-shirt-option").change(onChangeChildTShirtOption);
         $(".parent-t-shirt-option").change(onChangeParentTShirtOption);
         $("#is-parent-2").change(onAddNewParent);
-    </script>
+    </script>     
 {% endblock %}
