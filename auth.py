@@ -40,7 +40,7 @@ def register():
         insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size)
 
         # get parent id
-        parent_id = int(get_parent_id(parent_email)[0])
+        parent_id = int(get_parent_id_with_email(parent_email)[0])
 
         # load children
         for index in range(1, number_of_children + 1):
@@ -49,11 +49,32 @@ def register():
             elif request.form.get(f"child-{index}-t-shirt-option") == "false":
                 child = {"age": request.form.get(f"child-{index}-age"), "name": request.form.get(f"child-{index}-name"), "t_shirt_size": None}
             insert_child_info(child, parent_id)
+
+        session_login()
         return redirect(url_for("home"))
         
 
 
 
 @auth_bp.route("/login", methods=['GET', 'POST'])
-def login_page():
-    return render_template('login.html')
+def login():
+    if request.method == "GET":
+        return render_template('login.html')
+
+    elif request.method == "POST":
+        phone_number = request.form.get("phone-number")
+        parent_id = get_parent_id_with_phone_number(phone_number)
+        if parent_id:
+            session_login()
+            return redirect(url_for("home"))
+        else:
+            return render_template("login.html", error="Invalid phone number")
+
+
+
+        
+
+
+
+def session_login():
+    session["logged_in"] = True

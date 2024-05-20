@@ -1,0 +1,41 @@
+{% extends "layout.html" %} {% set page_title="Login" %}
+
+{% block heading %}
+    <h1>BW Field Day Account Login</h1>
+    <p>Fill out your information to login</p>
+{% endblock %}
+
+{% block content %}
+
+{% if error %}
+    <p class="bg-danger text-center text-white p-2" id="error-message">{{ error }}</p>
+{% else %}
+    <p id="error-message">&nbsp;</p>
+{% endif %}
+
+<form class="text-center" action="/login" method="POST">
+    <div>
+        <label for="phone-number">Phone Number:</label>
+        <input type="tel" name="phone-number" required>
+    </div>
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</form>
+<br>
+<p>Don't have an account? <a href="/register">Register</a></p>
+
+{% if error %}
+<script>
+    $(document).change(function() {
+        console.log("change")
+        fadeOut();
+    });
+
+    function fadeOut() {
+        $("#error-message").fadeOut(5000);
+    }
+</script>
+{% endif %}
+
+{% endblock %}

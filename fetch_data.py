@@ -70,13 +70,25 @@ def insert_child_info(child_dict, parent_id):
                 )
     connection.commit()
 
-def get_parent_id(parent_email):
+def get_parent_id_with_email(parent_email):
     connection = get_db()
     sql = connection.cursor()
     sql.execute("SELECT parent_id FROM parent_info WHERE parent_email = ?", (parent_email,))
     parent_id = sql.fetchone()
-    return parent_id
+    if parent_id:
+        return parent_id
+    else:
+        return None
 
+def get_parent_id_with_phone_number(parent_phone_number):
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("SELECT parent_id FROM parent_info WHERE parent_phone_number = ?", (parent_phone_number,))
+    parent_id = sql.fetchone()
+    if parent_id:
+        return parent_id
+    else:
+        return None
 
 
 

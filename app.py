@@ -10,6 +10,7 @@ from flask import (
 )
 from fetch_data import *
 from auth import *
+from decorators import *
 
 app = Flask(__name__)
 app.register_blueprint(auth_bp)
@@ -25,10 +26,12 @@ def home():
     return render_template("home.html")
 
 @app.route("/edit_info")
+@login_required
 def edit_info():
     parent_data = get_parent_info()
     return parent_data
 
 @app.route("/volunteering")
+@login_required
 def volunteering():
     return render_template("home.html")
