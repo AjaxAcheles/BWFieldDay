@@ -13,6 +13,14 @@
     <p id="error-message">&nbsp;</p>
 {% endif %}
 
+{% if message %}  
+    <p class="bg-success text-center text-white p-2" id="message">{{ message }}</p>
+{% else %}
+    <p id="message">&nbsp;</p>
+{% endif %}
+
+
+
 <form class="text-center" action="/login" method="POST">
     <div>
         <label for="phone-number">Phone Number:</label>

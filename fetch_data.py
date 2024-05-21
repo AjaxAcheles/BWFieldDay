@@ -18,7 +18,8 @@ def create_parent_info_table():
                     parent_1_t_shirt_size TEXT,
                     number_of_children INTEGER, 
                     parent_2_name TEXT,
-                    parent_2_t_shirt_size TEXT
+                    parent_2_t_shirt_size TEXT,
+                    number_of_volunteers INTEGER
                 )""")
     connection.commit()
 
@@ -48,12 +49,12 @@ def get_child_info():
     sql = connection.cursor()
     return sql.execute("SELECT * FROM child_info").fetchall()
 
-def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size):
+def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size, number_of_volunteers):
     connection = get_db()
     sql = connection.cursor()
-    sql.execute("""INSERT INTO parent_info (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size)
-                VALUES (?, ?, ?, ?, ?, ?, ?)""", 
-                (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size)
+    sql.execute("""INSERT INTO parent_info (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size, number_of_volunteers)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", 
+                (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size, number_of_volunteers)
                 )
     connection.commit()
 
