@@ -30,7 +30,7 @@
         <p id="error-message">&nbsp;</p>
     {% endif %}
     <!-- the form -->
-    <form class="text-center" action="/register" method="POST">
+    <form class="text-center" action="{{url_for('auth.register')}}" method="POST">
         <!-- parent 1 ask + info -->
         <div>
             <label for="parent-1-name">Parent Name:</label>

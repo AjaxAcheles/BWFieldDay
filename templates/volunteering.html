@@ -1,0 +1,42 @@
+{% extends "layout.html" %} {% set page_title="Volunteering Registration" %}
+
+{% block heading %}
+    <h1>BW Field Day Volunteering Registration</h1>
+    <p>Please fill out the form below to register for volunteering for BW Field Day.</p>
+{% endblock %}
+
+{% block content %}
+    <h1 className="home-text">Sign in Here</h1>
+    <p className="home-text1">Please select {{number_of_volunteers}} events to volunteer for</p>
+    <form class="text-center" action="{{url_for('account.volunteering')}}" method="POST">
+        <ul class="list-group">
+            <li class="list-group-item">Potato Sack Race</li>
+            <li class="list-group-item">
+                <ul class="list-group translate-middle-x" style="width: 50vw; margin-left: auto">
+                    <li class="list-group-item">
+                        <input name="potato-sack-race-start" class="form-check-input" value="" type="checkbox" id="potato-sack-race-start" />
+                        <label for="potato-sack-race-start">Starting Line</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input name="potato-sack-race-end" class="form-check-input" value="" type="checkbox" id="potato-sack-race-end" />
+                        <label for="potato-sack-race-end">Ending Line</label>
+                    </li>
+                </ul>
+            </li>
+            <li class="list-group-item">Obstacle Course</li>
+            <li class="list-group-item">
+                <ul class="list-group translate-middle-x" style="width: 50vw; margin-left: auto">
+                    <li class="list-group-item">
+                        <input name="obstacle-course-start" class="form-check-input" value="" type="checkbox" id="potato-sack-race-start" />
+                        <label for="potato-sack-race-start">Starting Line</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input name="obstacle-course-end" class="form-check-input" value="" type="checkbox" id="potato-sack-race-end" />
+                        <label for="potato-sack-race-end">Ending Line</label>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}

@@ -62,9 +62,6 @@ def register():
             return redirect(url_for("volunteering"))
         else:
             return redirect(url_for("home"))
-        
-
-
 
 @auth_bp.route("/login", methods=['GET', 'POST'])
 def login():
@@ -79,7 +76,6 @@ def login():
             return redirect(url_for("home"))
         else:
             return render_template("login.html", error="Invalid phone number")
-
 
 @auth_bp.route("/logout")
 def logout():
