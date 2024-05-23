@@ -8,6 +8,17 @@
 {% block content %}
     <h1 className="home-text">Sign in Here</h1>
     <p className="home-text1">Please select {{number_of_volunteers}} events to volunteer for</p>
+    {% if error %}
+        <p class="bg-danger text-center text-white p-2" id="error-message">{{ error }}</p>
+    {% else %}
+        <p id="error-message">&nbsp;</p>
+    {% endif %}
+
+    {% if message %}  
+        <p class="bg-success text-center text-white p-2" id="message">{{ message }}</p>
+    {% else %}
+        <p id="message">&nbsp;</p>
+    {% endif %}
     <form class="text-center" action="{{url_for('account.volunteering')}}" method="POST">
         <ul class="list-group">
             <li class="list-group-item">Potato Sack Race</li>
@@ -39,4 +50,16 @@
         </ul>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    {% if error %}
+    <script>
+        $(document).change(function() {
+            fadeOut();
+        });
+
+        function fadeOut() {
+            $("#error-message").fadeOut(5000);
+        }
+    </script>
+    {% endif %}
+
 {% endblock %}

@@ -10,6 +10,7 @@ from flask import (
 )
 from decorators import *
 from fetch_data import *
+from functions import *
 
 account_bp = Blueprint('account', __name__)
 
@@ -25,5 +26,11 @@ def edit_info():
 def volunteering():
     if request.method == 'GET':
         return render_template("volunteering.html")
+    
     elif request.method == 'POST':
-        return request.form
+        parent_id = get_parent_id()
+        number_of_volunteers = get_number_of_volunteers_with_parent_id(parent_id)
+        if len(request.form) != number_of_volunteers:
+            return render_template("volunteering.html", error=f"Please choose {number_of_volunteers} events")
+        else:
+            return [request.form]

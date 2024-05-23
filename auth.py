@@ -56,7 +56,7 @@ def register():
                 child = {"age": request.form.get(f"child-{index}-age"), "name": request.form.get(f"child-{index}-name"), "t_shirt_size": None}
             insert_child_info(child, parent_id)
 
-        set_logged_in()
+        set_logged_in(parent_id)
 
         if number_of_volunteers > 0:
             return redirect(url_for("volunteering"))
@@ -72,7 +72,7 @@ def login():
         phone_number = request.form.get("phone-number")
         parent_id = get_parent_id_with_phone_number(phone_number)
         if parent_id:
-            set_logged_in()
+            set_logged_in(parent_id)
             return redirect(url_for("home"))
         else:
             return render_template("login.html", error="Invalid phone number")

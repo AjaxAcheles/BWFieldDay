@@ -87,7 +87,17 @@ def get_parent_id_with_phone_number(parent_phone_number):
     sql.execute("SELECT parent_id FROM parent_info WHERE parent_phone_number = ?", (parent_phone_number,))
     parent_id = sql.fetchone()
     if parent_id:
-        return parent_id
+        return int(parent_id[0])
+    else:
+        return None
+    
+def get_number_of_volunteers_with_parent_id(parent_id):
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("SELECT number_of_volunteers FROM parent_info WHERE parent_id = ?", (parent_id,))
+    number_of_volunteers = sql.fetchone()
+    if number_of_volunteers:
+        return int(number_of_volunteers[0])
     else:
         return None
 
