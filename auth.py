@@ -18,7 +18,7 @@ auth_bp = Blueprint('auth', __name__)
 @logged_out_required
 def register():
     if request.method == "GET":
-        return render_template("register.html")
+        return render_template_with_session("register.html")
     
     elif request.method == "POST":
         parent_1_name = request.form.get("parent-1-name")
@@ -30,6 +30,12 @@ def register():
             parent_1_t_shirt_size = request.form.get("parent-1-t-shirt-size")
         elif parent_1_t_shirt_option == "false":
             parent_1_t_shirt_size = None
+        # is parent 1 volunteering?
+        if request.form.get("is-parent-1-volunteering") == "true":
+            is_parent_1_volunteering = True
+        else:
+            is_parent_1_volunteering = False
+        # parent 2 name
         parent_2_name = request.form.get("parent-2-name")
         # parent 2 t-shirt size
         parent_2_t_shirt_option = request.form.get("parent-2-t-shirt-option")
@@ -37,13 +43,17 @@ def register():
             parent_2_t_shirt_size = request.form.get("parent-2-t-shirt-size")
         elif parent_2_t_shirt_option == "false":
             parent_2_t_shirt_size = None
+        # is parent 2 volunteering?
+        if request.form.get("is-parent-2-volunteering") == "true":
+            is_parent_2_volunteering = True
+        else:
+            is_parent_2_volunteering = False
+
         # set number_of_children
         number_of_children = int(request.form.get("number-of-children"))
-        # set number_of_volunteers
-        number_of_volunteers = int(request.form.get("number-of-volunteers"))
         
         # add to database
-        insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size, number_of_volunteers)
+        insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children)
 
         # get parent id
         parent_id = int(get_parent_id_with_email(parent_email)[0])
@@ -58,15 +68,15 @@ def register():
 
         set_logged_in(parent_id)
 
-        if number_of_volunteers > 0:
-            return redirect(url_for("volunteering"))
+        if is_parent_1_volunteering is True or is_parent_2_volunteering is True:
+            return redirect(url_for("account.volunteering"))
         else:
             return redirect(url_for("home"))
 
 @auth_bp.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == "GET":
-        return render_template('login.html')
+        return render_template_with_session('login.html')
 
     elif request.method == "POST":
         phone_number = request.form.get("phone-number")
@@ -75,12 +85,12 @@ def login():
             set_logged_in(parent_id)
             return redirect(url_for("home"))
         else:
-            return render_template("login.html", error="Invalid phone number")
+            return render_template_with_session("login.html", error="Invalid phone number")
 
 @auth_bp.route("/logout")
 def logout():
     if is_logged_in():
         set_logged_out()
-        return render_template('login.html', message="You have been logged out")
+        return render_template_with_session('login.html', message="You have been logged out")
     else:
-        return render_template('login.html', message="You are not logged in")
+        return render_template_with_session('login.html', message="You are not logged in")

@@ -16,10 +16,11 @@ def create_parent_info_table():
                     parent_email TEXT,
                     parent_phone_number INTEGER, 
                     parent_1_t_shirt_size TEXT,
-                    number_of_children INTEGER, 
+                    is_parent_1_volunteering BOOLEAN,
                     parent_2_name TEXT,
                     parent_2_t_shirt_size TEXT,
-                    number_of_volunteers INTEGER
+                    is_parent_2_volunteering BOOLEAN,
+                    number_of_children INTEGER
                 )""")
     connection.commit()
 
@@ -49,12 +50,12 @@ def get_child_info():
     sql = connection.cursor()
     return sql.execute("SELECT * FROM child_info").fetchall()
 
-def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size, number_of_volunteers):
+def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children):
     connection = get_db()
     sql = connection.cursor()
-    sql.execute("""INSERT INTO parent_info (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size, number_of_volunteers)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", 
-                (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, number_of_children, parent_2_name, parent_2_t_shirt_size, number_of_volunteers)
+    sql.execute("""INSERT INTO parent_info (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children)
                 )
     connection.commit()
 
@@ -64,7 +65,6 @@ def insert_child_info(child_dict, parent_id):
     child_name = child_dict["name"]
     child_age = child_dict["age"]
     child_t_shirt_size = child_dict["t_shirt_size"]
-    print(child_dict, parent_id)
     sql.execute("""INSERT INTO child_info (child_name, child_age, child_t_shirt_size, parent_id)
                 VALUES (?, ?, ?, ?)""", 
                 (child_name, child_age, child_t_shirt_size, parent_id)
@@ -90,19 +90,22 @@ def get_parent_id_with_phone_number(parent_phone_number):
         return int(parent_id[0])
     else:
         return None
-    
-def get_number_of_volunteers_with_parent_id(parent_id):
+
+def get_volunteering_parents_with_parent_id(parent_id):
     connection = get_db()
     sql = connection.cursor()
-    sql.execute("SELECT number_of_volunteers FROM parent_info WHERE parent_id = ?", (parent_id,))
-    number_of_volunteers = sql.fetchone()
-    if number_of_volunteers:
-        return int(number_of_volunteers[0])
+    parent_data = sql.execute("SELECT parent_1_name, is_parent_1_volunteering, parent_2_name, is_parent_2_volunteering FROM parent_info WHERE parent_id = ?", (parent_id,))
+    parent_data = parent_data.fetchone() 
+    if parent_data:
+        volunteering_parents_list = [] 
+        if str(parent_data[1]) == "1":
+            volunteering_parents_list.append(parent_data[0])
+        if str(parent_data[3]) == "1":
+            volunteering_parents_list.append(parent_data[2])
+        print(volunteering_parents_list)
+        return volunteering_parents_list
     else:
         return None
 
 
 
-#parent name, parent email, parent phone number, number of children, parent t-shirt size if any
-#for each child, (child name, child age, child t-shirt size if t-shirt)
-#if parent not live and homeschool in brunswick county, then parent can not sign up

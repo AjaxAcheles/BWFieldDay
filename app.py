@@ -25,9 +25,9 @@ app.secret_key = "NJMFTGEWTRIOPHGFVFXGDCljkfgtre45tiophufhgyju435u8o9324i09dfhku
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    return render_template_with_session("home.html")
 
 @app.route("/FAQ")
 def frequently_asked_questions():
-    return render_template("frequently_asked_questions.html")
+    return render_template_with_session("frequently_asked_questions.html")
 

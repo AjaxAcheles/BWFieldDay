@@ -25,25 +25,22 @@
             <li class="list-group-item">
                 <ul class="list-group translate-middle-x" style="width: 50vw; margin-left: auto">
                     <li class="list-group-item">
-                        <input name="potato-sack-race-start" class="form-check-input" value="" type="checkbox" id="potato-sack-race-start" />
                         <label for="potato-sack-race-start">Starting Line</label>
+                        <select name="potato-sack-race-start" id="potato-sack-race-start">
+                            <option selected value="">Select Parent</option>
+                            {% for parent in volunteering_parents %}
+                                <option value="{{parent}}">{{parent}}</option>
+                            {% endfor %}
+                        </select>
                     </li>
                     <li class="list-group-item">
-                        <input name="potato-sack-race-end" class="form-check-input" value="" type="checkbox" id="potato-sack-race-end" />
                         <label for="potato-sack-race-end">Ending Line</label>
-                    </li>
-                </ul>
-            </li>
-            <li class="list-group-item">Obstacle Course</li>
-            <li class="list-group-item">
-                <ul class="list-group translate-middle-x" style="width: 50vw; margin-left: auto">
-                    <li class="list-group-item">
-                        <input name="obstacle-course-start" class="form-check-input" value="" type="checkbox" id="potato-sack-race-start" />
-                        <label for="potato-sack-race-start">Starting Line</label>
-                    </li>
-                    <li class="list-group-item">
-                        <input name="obstacle-course-end" class="form-check-input" value="" type="checkbox" id="potato-sack-race-end" />
-                        <label for="potato-sack-race-end">Ending Line</label>
+                        <select name="potato-sack-race-end" id="potato-sack-race-end">
+                            <option selected value="">Select Parent</option>
+                            {% for parent in volunteering_parents %}
+                                <option value="{{parent}}">{{parent}}</option>
+                            {% endfor %}
+                        </select>
                     </li>
                 </ul>
             </li>

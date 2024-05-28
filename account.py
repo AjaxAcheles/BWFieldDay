@@ -1,7 +1,6 @@
 from flask import (
     Blueprint, 
     Flask, 
-    render_template, 
     request, 
     redirect, 
     url_for, 
@@ -25,12 +24,14 @@ def edit_info():
 @login_required
 def volunteering():
     if request.method == 'GET':
-        return render_template("volunteering.html")
+        parent_id = get_parent_id()
+        volunteering_parents = get_volunteering_parents_with_parent_id(parent_id)
+        return render_template_with_session("volunteering.html", volunteering_parents=volunteering_parents)
     
     elif request.method == 'POST':
         parent_id = get_parent_id()
-        number_of_volunteers = get_number_of_volunteers_with_parent_id(parent_id)
+        number_of_volunteers = len(get_volunteering_parents_with_parent_id(parent_id))
         if len(request.form) != number_of_volunteers:
-            return render_template("volunteering.html", error=f"Please choose {number_of_volunteers} events")
+            return render_template_with_session("volunteering.html", error=f"Please choose {number_of_volunteers} events")
         else:
             return [request.form]

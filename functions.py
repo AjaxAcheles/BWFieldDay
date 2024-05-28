@@ -9,8 +9,12 @@ from flask import (
     g
 )
 
-def render_template_with_session(template_name):
-    return render_template(template_name, session=session)
+def render_template_with_session(template_name, *args, **kwargs):
+    return render_template(template_name, session=session, *args, **kwargs)
+
+
+def get_parent_id():
+    return session.get("parent_id")
 
 
 def set_logged_in(parent_id):
@@ -28,5 +32,4 @@ def get_parent_id():
 
 def is_logged_in():
     return session.get("logged_in")
-
 
