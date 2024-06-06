@@ -17,9 +17,10 @@ def get_parent_id():
     return session.get("parent_id")
 
 
-def set_logged_in(parent_id):
+def set_logged_in(parent_id, children_id:dict):
     session["logged_in"] = True
     session["parent_id"] = parent_id
+    session["children_id"] = children_id
 
 
 def set_logged_out():

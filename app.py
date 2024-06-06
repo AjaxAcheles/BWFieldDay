@@ -31,3 +31,5 @@ def home():
 def frequently_asked_questions():
     return render_template_with_session("frequently_asked_questions.html")
 
+if __name__ == "__main__":
+    app.run(debug=True)

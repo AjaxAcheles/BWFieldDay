@@ -1,4 +1,4 @@
-{% extends "layout.html" %} {% set page_title="Registration" %}
+{% extends "layout.html" %} {% set page_title="Edit Info" %}
 
 {% block heading %}
     <h1>BW Field Day Registration</h1>
@@ -6,23 +6,6 @@
 {% endblock %}
 
 {% block content %}
-    <!-- The popup div -->
-    <div class="modal fade" id="residencyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="residencyModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="residencyModalLabel">Brunswick County Residency Confirmation</h5>
-                </div>
-                <div class="modal-body">
-                    <p>By clicking "Yes", you confirm that you live in Brunswick County.</p>
-                </div>
-                <div class="modal-footer">
-                    <button id="residency-no-button" type="button" class="btn btn-secondary"><a class="text-white link-underline-opacity-0" href="{{url_for('auth.login')}}">No</a></button>
-                    <button id="residency-yes-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- error message -->
     {% if error %}
         <p class="bg-danger text-center text-white p-2" id="error-message">{{ error }}</p>
@@ -30,33 +13,35 @@
         <p id="error-message">&nbsp;</p>
     {% endif %}
     <!-- the form -->
-    <form class="text-center" action="{{url_for('auth.register')}}" method="POST">
+    <form class="text-center" action="{{url_for('account.edit_info')}}" method="POST">
         <!-- parent 1 ask + info -->
         <div>
             <label for="parent-1-name">Parent Name:</label>
-            <input type="text" id="parent-1-name" name="parent-1-name" >
+            <input type="text" id="parent-1-name" name="parent-1-name" value="{{parent_info['parent_1_name']}}" required>
         </div>
         <div>
             <label for="parent-email">Parent Email:</label>
-            <input type="email" id="parent-email" name="parent-email" >
+            <input type="email" id="parent-email" name="parent-email" value="{{parent_info['parent_email']}}" required>
         </div>
         <div>
             <label for="parent-phone-number">Parent Phone Number:</label>
-            <input type="number" id="parent-phone-number" name="parent-phone-number" >
+            <input type="number" id="parent-phone-number" name="parent-phone-number" value="{{parent_info['parent_phone_number']}}" required">
         </div>
         <div>
             <label for="parent-1-t-shirt-option">Do you want a t-shirt?</label>
             <select class="parent-t-shirt-option" data-parentNumber="1" name="parent-1-t-shirt-option" id="parent-1-t-shirt-option">
-                <option value="false">No</option>
-                <option value="true">Yes</option>
+                <option value="false" {% if parent_info['parent_1_t_shirt_size'] == none %} selected {% endif %}>No</option>
+                <option value="true" {% if parent_info['parent_1_t_shirt_size'] != none %} selected {% endif %}>Yes</option>
             </select>
         </div>
-        <div id="parent-1-t-shirt-size-container" style="display: none;">
+        <div id="parent-1-t-shirt-size-container" {% if parent_info['parent_1_t_shirt_size'] is none %} style="display: none;" {% endif %}>
             <label for="parent-1-t-shirt-size">T-Shirt Size</label>
             <select name="parent-1-t-shirt-size" id="parent-1-t-shirt-size">
-                <option class="null-option" value="null" disabled selected>--Select an option--</option>
+                {% if parent_info['parent_1_t_shirt_size'] is none %}
+                    <option class="null-option" value="null" disabled selected>--Select an option--</option>
+                {% endif %}
                 {% for size in t_shirt_sizes %}
-                    <option value="{{size}}">{{size}}</option>
+                    <option value="{{size}}" {% if parent_info['parent_1_t_shirt_size'] == size %} selected {% endif %}>{{size}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -64,8 +49,8 @@
         <div>
             <label for="is-parent-1-volunteering">Are you volunteering?</label>
             <select name="is-parent-1-volunteering" id="is-parent-1-volunteering">
-                <option value="false">No</option>
-                <option value="true">Yes</option>
+                <option value="false" {% if parent_info['is_parent_1_volunteering'] == false %} selected {% endif %}>No</option>
+                <option value="true" {% if parent_info['is_parent_1_volunteering'] == true %} selected {% endif %}>Yes</option>
             </select>
         </div>
 
@@ -74,36 +59,38 @@
         <div>
             <label for="is-parent-2">Is there a second parent?</label>
             <select name="is-parent-2" id="is-parent-2">
-                <option value="false" selected>No</option>
-                <option value="true">Yes</option>
+                <option value="false" {% if parent_info['parent_2_name'] == "" %} selected {% endif %}>No</option>
+                <option value="true" {% if parent_info['parent_2_name'] != "" %} selected {% endif %}>Yes</option>
             </select>
         </div>
-        <div id="parent-2-info-container" style="display: none;">
+        <div id="parent-2-info-container" {% if parent_info['parent_2_name'] == "" %} style="display: none;" {% endif %}>
             <div>
                 <label for="parent-2-name">Parent 2 Name:</label>
-                <input type="text" id="parent-2-name" name="parent-2-name" >
+                <input type="text" id="parent-2-name" name="parent-2-name" value="{{parent_info['parent_2_name']}}" {% if parent_info['parent_2_name'] != "" %} required {% endif %}>
             </div>
             <div>
-                <label for="parent-2-t-shirt-option">Do they want a t-shirt?</label>
+                <label for="parent-2-t-shirt-option">Do you want a t-shirt?</label>
                 <select class="parent-t-shirt-option" data-parentNumber="2" name="parent-2-t-shirt-option" id="parent-2-t-shirt-option">
-                    <option value="false">No</option>
-                    <option value="true">Yes</option>
+                    <option value="false" {% if parent_info['parent_2_t_shirt_size'] == none %} selected {% endif %}>No</option>
+                    <option value="true" {% if parent_info['parent_2_t_shirt_size'] != none %} selected {% endif %}>Yes</option>
                 </select>
             </div>
-            <div id="parent-2-t-shirt-size-container" style="display: none;">
+            <div id="parent-2-t-shirt-size-container" {% if parent_info['parent_2_t_shirt_size'] is none %} style="display: none;" {% endif %}>
                 <label for="parent-2-t-shirt-size">T-Shirt Size</label>
                 <select name="parent-2-t-shirt-size" id="parent-2-t-shirt-size">
-                    <option value="null" disabled selected>--Select an option--</option>
+                    {% if parent_info['parent_2_t_shirt_size'] is none %}
+                        <option class="null-option" value="null" disabled selected>--Select an option--</option>
+                    {% endif %}
                     {% for size in t_shirt_sizes %}
-                        <option value="{{size}}">{{size}}</option>
+                        <option value="{{size}}" {% if parent_info['parent_2_t_shirt_size'] == size %} selected {% endif %}>{{size}}</option>
                     {% endfor %}
                 </select>
             </div>
             <div>
                 <label for="is-parent-2-volunteering">Are you volunteering?</label>
                 <select name="is-parent-2-volunteering" id="is-parent-2-volunteering">
-                    <option value="false">No</option>
-                    <option value="true">Yes</option>
+                    <option value="false" {% if parent_info['is_parent_2_volunteering'] == false %} selected {% endif %}>No</option>
+                    <option value="true" {% if parent_info['is_parent_2_volunteering'] == true %} selected {% endif %}>Yes</option>
                 </select>
             </div>
         </div>
@@ -112,33 +99,51 @@
 
         <div>
             <label for="number-of-children">Number of Children:</label>
-            <input type="number" id="number-of-children" name="number-of-children" min="1" max="10" value=0 >
+            <input type="number" id="number-of-children" name="number-of-children" min="1" max="10" value="{{parent_info['number_of_children']}}" required">
         </div>
 
         <h2>Children Information</h2>
         <div id="children-info-container">
+            {% for index in range(0, children_info|length) %}
+            <div class="children-info" id="child-{{index + 1}}-info">
+                <div>
+                    <label for="child-{{index + 1}}-name">Child Name</label>
+                    <input type="text" id="child-{{index + 1}}-name" name="child-{{index + 1}}-name" value="{{children_info[index]['child_name']}}" required>
+                </div>
+                <div>
+                    <label for="child-{{index + 1}}-age">Child Age</label>
+                    <input type="number" id="child-{{index + 1}}-age" name="child-{{index + 1}}-age" value="{{children_info[index]['child_age']}}" required>
+                </div>
+                <div>
+                    <label for="child-{{index + 1}}-t-shirt-option">Does this child want a t-shirt?</label>
+                    <select class="child-t-shirt-option" data-childNumber="{{index + 1}}" name="child-{{index + 1}}-t-shirt-option" id="child-{{index + 1}}-t-shirt-option">
+                        <option value="true" {% if children_info[index]['child_t_shirt_size'] != none %} selected {% endif %}>Yes</option>
+                        <option value="false" {% if children_info[index]['child_t_shirt_size'] == none %} selected {% endif %}>No</option>
+                    </select>
+                </div>
+                <div id="child-{{index + 1}}-t-shirt-size-container" {% if children_info[index]['child_t_shirt_size'] is none %} style="display: none;" {% endif %}>
+                    <label for="child-{{index + 1}}-t-shirt-size">T-Shirt Size</label>
+                    <select name="child-{{index + 1}}-t-shirt-size" id="child-{{index + 1}}-t-shirt-size">
+                    {% if children_info[index]['child_t_shirt_size'] is none %}
+                        <option class="null-option" value="null" disabled selected>--Select an option--</option>
+                    {% endif %}
+                    {% for size in t_shirt_sizes %}
+                        <option value="{{size}}" {% if children_info[index]['child_t_shirt_size'] == size %} selected {% endif %}>{{size}}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+            {% endfor %}
         </div>
 
-        <button type="submit">Register</button>
+        <button type="submit">Save</button>
     </form>
-
-    <p id="t_shirt_sizes" style="display: none;">{{t_shirt_sizes}}</p>
-
 <!--parent needs t-shirt, child needs option to not get t-shirt-->
     <script>
-
-        t_shirt_sizes = $("#t_shirt_sizes").text().replaceAll("'","").replaceAll('"',"").replaceAll("[","").replaceAll("]","").split(",");
-
-
-        // when the page loads, show the pop up.
-        $(document).ready(function() {
-            $('#residencyModal').modal('show');
-        });
-
         // after detecting a change in the value of #number-of-children, set the variable numChildren to the new value
         var numChildren = $("#number-of-children").val();
 
-        function onAddChild () { 
+        function onAddChild() { 
             var newNumChildren = $("#number-of-children").val();
             numChildren = Number(numChildren);
             newNumChildren = Number(newNumChildren);
@@ -178,7 +183,8 @@
                             <label for="child-${index}-t-shirt-size">T-Shirt Size</label>
                             <select name="child-${index}-t-shirt-size" id="child-${index}-t-shirt-size">
                                 <option value="null" disabled selected>--Select an option--</option>
-                                ${t_shirt_sizes.map(size => `<option value="${size}">${size}</option>`).join("")}
+                                <option value="M">M</option>
+                                <option value="L">L</option>
                             </select>
                         </div>
                     </div>

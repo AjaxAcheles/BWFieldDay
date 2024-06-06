@@ -18,7 +18,7 @@ auth_bp = Blueprint('auth', __name__)
 @logged_out_required
 def register():
     if request.method == "GET":
-        return render_template_with_session("register.html")
+        return render_template_with_session("register.html", t_shirt_sizes=["Youth S", "Youth M", "Youth L", "Youth XL", "XS", "S", "M", "L", "XL", "XXL", "XXXL"])
     
     elif request.method == "POST":
         parent_1_name = request.form.get("parent-1-name")
@@ -59,14 +59,18 @@ def register():
         parent_id = int(get_parent_id_with_email(parent_email)[0])
 
         # load children
+        children_id = {}
         for index in range(1, number_of_children + 1):
+            child_name = request.form.get(f"child-{index}-name")
+            child_age = int(request.form.get(f"child-{index}-age"))
             if request.form.get(f"child-{index}-t-shirt-option") == "true":
-                child = {"age": request.form.get(f"child-{index}-age"), "name": request.form.get(f"child-{index}-name"), "t_shirt_size": request.form.get(f"child-{index}-t-shirt-size")}
+                child_t_shirt_size = request.form.get(f"child-{index}-t-shirt-size")
             elif request.form.get(f"child-{index}-t-shirt-option") == "false":
-                child = {"age": request.form.get(f"child-{index}-age"), "name": request.form.get(f"child-{index}-name"), "t_shirt_size": None}
-            insert_child_info(child, parent_id)
+                child_t_shirt_size = None
+            child_id = insert_child_info(child_name, child_age, child_t_shirt_size, parent_id)
+            children_id[child_name] = child_id
 
-        set_logged_in(parent_id)
+        set_logged_in(parent_id, children_id)
 
         if is_parent_1_volunteering is True or is_parent_2_volunteering is True:
             return redirect(url_for("account.volunteering"))
@@ -80,9 +84,9 @@ def login():
 
     elif request.method == "POST":
         phone_number = request.form.get("phone-number")
-        parent_id = get_parent_id_with_phone_number(phone_number)
-        if parent_id:
-            set_logged_in(parent_id)
+        ids_dict = get_parent_id_and_children_id_with_phone_number(phone_number)
+        if ids_dict:
+            set_logged_in(ids_dict["parent_id"], ids_dict["children_info_dict"])
             return redirect(url_for("home"))
         else:
             return render_template_with_session("login.html", error="Invalid phone number")
