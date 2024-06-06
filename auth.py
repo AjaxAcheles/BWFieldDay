@@ -24,6 +24,10 @@ def register():
         parent_1_name = request.form.get("parent-1-name")
         parent_email = request.form.get("parent-email")
         parent_phone_number = int(request.form.get("parent-phone-number"))
+        if is_parent_exits(parent_phone_number):
+            return render_template_with_session("login.html", error="Account already exists.")
+        # parent 1 name
+            
         # parent 1 t-shirt size
         parent_1_t_shirt_option = request.form.get("parent-1-t-shirt-option")
         if parent_1_t_shirt_option == "true":

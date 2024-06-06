@@ -68,7 +68,7 @@ def edit_info():
                 child_t_shirt_size = None
             
             # edit child info in the database
-            edit_child_info(session["children_id"][child_name], child_name, child_age, child_t_shirt_size, session["parent_id"])
+            edit_child_info(session["children_id"][child_name], child_name, child_age, child_t_shirt_size)
         return redirect(url_for("account.edit_info"))
 
 

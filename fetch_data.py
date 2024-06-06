@@ -163,4 +163,13 @@ def get_volunteering_parents_with_parent_id(parent_id):
         return None
 
 
+def is_parent_exits(parent_phone_number):
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("SELECT parent_id FROM parent_info WHERE parent_phone_number = ?", (parent_phone_number,))
+    parent_id = sql.fetchone()
+    if parent_id:
+        return True
+    else:
+        return False    
 
