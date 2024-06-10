@@ -59,8 +59,13 @@ def edit_info():
         edit_parent_info(session["parent_id"], parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children)
 
         # load children
+        past_child_names = []
         for index in range(1, number_of_children + 1):
             child_new_name = request.form.get(f"child-{index}-name")
+            if child_new_name in past_child_names:
+                return "error, name already exists"
+            else:
+                past_child_names.append(child_new_name)
             child_old_name = request.form.get(f"child-{index}-old-name")
             child_age = int(request.form.get(f"child-{index}-age"))
             if request.form.get(f"child-{index}-t-shirt-option") == "true":
@@ -72,8 +77,6 @@ def edit_info():
             if child_new_name != child_old_name:
                 session["children_id"][child_new_name] = session["children_id"][child_old_name] 
                 del session["children_id"][child_old_name]
-
-            return [session["children_id"], child_new_name, child_old_name]
             
             # edit child info in the database
             edit_child_info(session["children_id"][child_new_name], child_new_name, child_age, child_t_shirt_size)

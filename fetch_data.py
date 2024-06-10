@@ -124,7 +124,7 @@ def get_parent_id_with_email(parent_email):
     sql.execute("SELECT parent_id FROM parent_info WHERE parent_email = ?", (parent_email,))
     parent_id = sql.fetchone()
     if parent_id:
-        return parent_id
+        return parent_id[0]
     else:
         return None
 
@@ -138,12 +138,11 @@ def get_parent_id_and_children_id_with_phone_number(parent_phone_number):
     else:
         return None
     children_info = sql.execute("SELECT child_name, child_id FROM child_info WHERE parent_id = ?", (parent_id,)).fetchall()
-    print(children_info)
     children_info_dict = {}
     for child in children_info:
         # children_info_dict[child_name] = child_id
         children_info_dict[child[0]] = child[1]
-    print(children_info_dict)
+        print(children_info_dict)
     return {"parent_id": parent_id, "children_info_dict": children_info_dict}
 
 

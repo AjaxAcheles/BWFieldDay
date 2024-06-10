@@ -55,15 +55,15 @@ def register():
 
         # set number_of_children
         number_of_children = int(request.form.get("number-of-children"))
-        
+
         # add to database
         insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children)
 
         # get parent id
-        parent_id = int(get_parent_id_with_email(parent_email)[0])
-
+        parent_id = int(get_parent_id_with_email(parent_email))
+        print("parent id:", parent_id)
+        
         # load children
-        children_id = {}
         for index in range(1, number_of_children + 1):
             child_name = request.form.get(f"child-{index}-name")
             child_age = int(request.form.get(f"child-{index}-age"))
@@ -72,9 +72,11 @@ def register():
             elif request.form.get(f"child-{index}-t-shirt-option") == "false":
                 child_t_shirt_size = None
             child_id = insert_child_info(child_name, child_age, child_t_shirt_size, parent_id)
-            children_id[child_name] = child_id
 
-        set_logged_in(parent_id, children_id)
+
+        ids_dict = get_parent_id_and_children_id_with_phone_number(parent_phone_number)
+        print(ids_dict)
+        set_logged_in(ids_dict["parent_id"], ids_dict["children_info_dict"])
 
         if is_parent_1_volunteering is True or is_parent_2_volunteering is True:
             return redirect(url_for("account.volunteering"))
