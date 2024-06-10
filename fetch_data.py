@@ -88,9 +88,14 @@ def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_
 def edit_parent_info(parent_id, parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children):
     connection = get_db()
     sql = connection.cursor()
-    sql.execute("""UPDATE parent_info SET parent_1_name = ?, parent_email = ?, parent_phone_number = ?, parent_1_t_shirt_size = ?, is_parent_1_volunteering = ?, parent_2_name = ?, parent_2_t_shirt_size = ?, is_parent_2_volunteering = ?, number_of_children = ? WHERE parent_id = ?""", 
-                (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children, parent_id)
-                )
+    if parent_2_name is None and parent_2_t_shirt_size is None and is_parent_2_volunteering is None:
+        sql.execute("""UPDATE parent_info SET parent_1_name = ?, parent_email = ?, parent_phone_number = ?, parent_1_t_shirt_size = ?, is_parent_1_volunteering = ?, parent_2_name = ?, parent_2_t_shirt_size = ?, is_parent_2_volunteering = ?, number_of_children = ? WHERE parent_id = ?""", 
+                    (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, None, None, None, number_of_children, parent_id)
+                    )
+    else:
+        sql.execute("""UPDATE parent_info SET parent_1_name = ?, parent_email = ?, parent_phone_number = ?, parent_1_t_shirt_size = ?, is_parent_1_volunteering = ?, parent_2_name = ?, parent_2_t_shirt_size = ?, is_parent_2_volunteering = ?, number_of_children = ? WHERE parent_id = ?""", 
+                    (parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children, parent_id)
+                    )
     connection.commit()
 
 
@@ -102,10 +107,10 @@ def insert_child_info(child_name, child_age, child_t_shirt_size, parent_id):
                 (child_name, child_age, child_t_shirt_size, parent_id)
                 )
     connection.commit()
-    child_id = sql.execute("""SELECT child_id FROM child_info WHERE child_name = ? AND child_age = ? AND child_t_shirt_size = ? AND parent_id = ?""", 
-                (child_name, child_age, child_t_shirt_size, parent_id)
-                )
-    return child_id.fetchone()
+    child_id = sql.lastrowid
+    return child_id
+
+
 
 
 def edit_child_info(child_id, child_name, child_age, child_t_shirt_size):
@@ -142,7 +147,6 @@ def get_parent_id_and_children_id_with_phone_number(parent_phone_number):
     for child in children_info:
         # children_info_dict[child_name] = child_id
         children_info_dict[child[0]] = child[1]
-        print(children_info_dict)
     return {"parent_id": parent_id, "children_info_dict": children_info_dict}
 
 
@@ -157,7 +161,6 @@ def get_volunteering_parents_with_parent_id(parent_id):
             volunteering_parents_list.append(parent_data[0])
         if str(parent_data[3]) == "1":
             volunteering_parents_list.append(parent_data[2])
-        print(volunteering_parents_list)
         return volunteering_parents_list
     else:
         return None

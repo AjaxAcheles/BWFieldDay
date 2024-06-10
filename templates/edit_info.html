@@ -59,14 +59,14 @@
         <div>
             <label for="is-parent-2">Is there a second parent?</label>
             <select name="is-parent-2" id="is-parent-2">
-                <option value="false" {% if parent_info['parent_2_name'] == "" %} selected {% endif %}>No</option>
-                <option value="true" {% if parent_info['parent_2_name'] != "" %} selected {% endif %}>Yes</option>
+                <option value="false" {% if parent_info['parent_2_name'] is none %} selected {% endif %}>No</option>
+                <option value="true" {% if parent_info['parent_2_name'] is not none %} selected {% endif %}>Yes</option>
             </select>
         </div>
-        <div id="parent-2-info-container" {% if parent_info['parent_2_name'] == "" %} style="display: none;" {% endif %}>
+        <div id="parent-2-info-container" {% if parent_info['parent_2_name'] is none %} style="display: none;" {% endif %}>
             <div>
                 <label for="parent-2-name">Parent 2 Name:</label>
-                <input type="text" id="parent-2-name" name="parent-2-name" value="{{parent_info['parent_2_name']}}" {% if parent_info['parent_2_name'] != "" %} required {% endif %}>
+                <input type="text" id="parent-2-name" name="parent-2-name" {% if parent_info['parent_2_name'] is not none %} value="{{parent_info['parent_2_name']}}" {% endif %}>
             </div>
             <div>
                 <label for="parent-2-t-shirt-option">Do you want a t-shirt?</label>

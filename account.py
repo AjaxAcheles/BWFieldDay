@@ -24,8 +24,8 @@ def edit_info():
         return render_template_with_session("edit_info.html", parent_info=parent_info, children_info=children_info, t_shirt_sizes=["Youth S", "Youth M", "Youth L", "Youth XL", "XS", "S", "M", "L", "XL", "XXL", "XXXL"])
     
     elif request.method == 'POST':
-        parent_1_name = request.form.get("parent-1-name")
-        parent_email = request.form.get("parent-email")
+        parent_1_name = request.form.get("parent-1-name").lower()
+        parent_email = request.form.get("parent-email").lower()
         parent_phone_number = int(request.form.get("parent-phone-number"))
         # parent 1 t-shirt size
         parent_1_t_shirt_option = request.form.get("parent-1-t-shirt-option")
@@ -39,18 +39,23 @@ def edit_info():
         else:
             is_parent_1_volunteering = False
         # parent 2 name
-        parent_2_name = request.form.get("parent-2-name")
-        # parent 2 t-shirt size
-        parent_2_t_shirt_option = request.form.get("parent-2-t-shirt-option")
-        if parent_2_t_shirt_option == "true":
-            parent_2_t_shirt_size = request.form.get("parent-2-t-shirt-size")
-        elif parent_2_t_shirt_option == "false":
+        parent_2_name = request.form.get("parent-2-name").lower()
+        if parent_2_name.replace(" ", "") == "" or request.form.get("is-parent-2") == "false":
+            parent_2_name = None
             parent_2_t_shirt_size = None
-        # is parent 2 volunteering?
-        if request.form.get("is-parent-2-volunteering") == "true":
-            is_parent_2_volunteering = True
+            is_parent_2_volunteering = None
         else:
-            is_parent_2_volunteering = False
+            # parent 2 t-shirt size
+            parent_2_t_shirt_option = request.form.get("parent-2-t-shirt-option")
+            if parent_2_t_shirt_option == "true":
+                parent_2_t_shirt_size = request.form.get("parent-2-t-shirt-size")
+            elif parent_2_t_shirt_option == "false":
+                parent_2_t_shirt_size = None
+            # is parent 2 volunteering?
+            if request.form.get("is-parent-2-volunteering") == "true":
+                is_parent_2_volunteering = True
+            else:
+                is_parent_2_volunteering = False
 
         # set number_of_children
         number_of_children = int(request.form.get("number-of-children"))
@@ -61,12 +66,27 @@ def edit_info():
         # load children
         past_child_names = []
         for index in range(1, number_of_children + 1):
-            child_new_name = request.form.get(f"child-{index}-name")
+            child_new_name = request.form.get(f"child-{index}-name").lower()
             if child_new_name in past_child_names:
-                return "error, name already exists"
+                return ["error, name already exists", past_child_names, child_new_name]
             else:
                 past_child_names.append(child_new_name)
-            child_old_name = request.form.get(f"child-{index}-old-name")
+
+            # detection for new children.
+            try:
+                child_old_name = request.form.get(f"child-{index}-old-name").lower()
+            except:
+                child_name = request.form.get(f"child-{index}-name").lower()
+                child_age = int(request.form.get(f"child-{index}-age"))
+                if request.form.get(f"child-{index}-t-shirt-option") == "true":
+                    child_t_shirt_size = request.form.get(f"child-{index}-t-shirt-size")
+                elif request.form.get(f"child-{index}-t-shirt-option") == "false":
+                    child_t_shirt_size = None
+                child_id = insert_child_info(child_name, child_age, child_t_shirt_size, session["parent_id"])
+                add_child(child_name, child_id)
+                print(session["children_id"])
+                continue
+
             child_age = int(request.form.get(f"child-{index}-age"))
             if request.form.get(f"child-{index}-t-shirt-option") == "true":
                 child_t_shirt_size = request.form.get(f"child-{index}-t-shirt-size")

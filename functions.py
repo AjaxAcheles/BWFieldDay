@@ -34,3 +34,8 @@ def get_parent_id():
 def is_logged_in():
     return session.get("logged_in")
 
+def add_child(name, child_id):
+    children_id = session.get("children_id")
+    children_id[name] = child_id
+    session["children_id"] = children_id
+    
