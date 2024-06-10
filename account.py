@@ -60,15 +60,23 @@ def edit_info():
 
         # load children
         for index in range(1, number_of_children + 1):
-            child_name = request.form.get(f"child-{index}-name")
+            child_new_name = request.form.get(f"child-{index}-name")
+            child_old_name = request.form.get(f"child-{index}-old-name")
             child_age = int(request.form.get(f"child-{index}-age"))
             if request.form.get(f"child-{index}-t-shirt-option") == "true":
                 child_t_shirt_size = request.form.get(f"child-{index}-t-shirt-size")
             elif request.form.get(f"child-{index}-t-shirt-option") == "false":
                 child_t_shirt_size = None
+
+            # remap child id to new child name in session if child name has been changed
+            if child_new_name != child_old_name:
+                session["children_id"][child_new_name] = session["children_id"][child_old_name] 
+                del session["children_id"][child_old_name]
+
+            return [session["children_id"], child_new_name, child_old_name]
             
             # edit child info in the database
-            edit_child_info(session["children_id"][child_name], child_name, child_age, child_t_shirt_size)
+            edit_child_info(session["children_id"][child_new_name], child_new_name, child_age, child_t_shirt_size)
         return redirect(url_for("account.edit_info"))
 
 

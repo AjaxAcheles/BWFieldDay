@@ -1,7 +1,7 @@
 {% extends "layout.html" %} {% set page_title="Edit Info" %}
 
 {% block heading %}
-    <h1>BW Field Day Registration</h1>
+    <h1>Edit Info</h1>
     <p>Please fill out the form below to register for BW Field Day.</p>
 {% endblock %}
 
@@ -109,6 +109,7 @@
                 <div>
                     <label for="child-{{index + 1}}-name">Child Name</label>
                     <input type="text" id="child-{{index + 1}}-name" name="child-{{index + 1}}-name" value="{{children_info[index]['child_name']}}" required>
+                    <input type="hidden" name="child-{{index + 1}}-old-name" value="{{children_info[index]['child_name']}}">
                 </div>
                 <div>
                     <label for="child-{{index + 1}}-age">Child Age</label>
@@ -133,6 +134,7 @@
                     </select>
                 </div>
             </div>
+            <br>
             {% endfor %}
         </div>
 

@@ -22,9 +22,6 @@
               <a class="nav-link text-dark" href="{{url_for('home')}}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-dark" href="{{url_for('auth.login')}}">Login</a>
-            </li> 
-            <li class="nav-item">
               <a class="nav-link text-dark" href="{{url_for('account.edit_info')}}">Edit Info</a>
             </li> 
             <li class="nav-item">
@@ -37,6 +34,10 @@
             <li class="nav-item navbarNav-right"> <!--sign out button-->
               <a class="nav-link text-primary" href="{{url_for('auth.logout')}}">Logout</a>
             </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="{{url_for('auth.login')}}">Login</a>
+            </li> 
             {% endif %}
           </ul><!--navbar-nav-->
         </div><!--#navbarNav-->

@@ -111,7 +111,8 @@ def insert_child_info(child_name, child_age, child_t_shirt_size, parent_id):
 def edit_child_info(child_id, child_name, child_age, child_t_shirt_size):
     connection = get_db()
     sql = connection.cursor()
-    sql.execute("""UPDATE child_info SET child_name = ?, child_age = ?, child_t_shirt_size = ? WHERE child_id = ?""", 
+    sql.execute("""
+                UPDATE child_info SET child_name = ?, child_age = ?, child_t_shirt_size = ? WHERE child_id = ?""", 
                 (child_name, child_age, child_t_shirt_size, child_id)
                 )
     connection.commit()
