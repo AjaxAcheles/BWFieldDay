@@ -8,17 +8,24 @@
 {% block content %}
     <h1 className="home-text">Sign in Here</h1>
     <p className="home-text1">Please select {{number_of_volunteers}} events to volunteer for</p>
+    {% with flash = get_flashed_messages(category_filter=["error"]) %}
+    {% set error = flash[0] %}
     {% if error %}
         <p class="bg-danger text-center text-white p-2" id="error-message">{{ error }}</p>
     {% else %}
         <p id="error-message">&nbsp;</p>
     {% endif %}
-
-    {% if message %}  
-        <p class="bg-success text-center text-white p-2" id="message">{{ message }}</p>
+    {% endwith %}
+    
+    {% with flash = get_flashed_messages(category_filter=["message"]) %}
+    {% set message = flash[0] %}
+    {% if message %}
+        <p class="bg-primary text-center text-white p-2" id="message">{{ message }}</p>
     {% else %}
         <p id="message">&nbsp;</p>
     {% endif %}
+    {% endwith %}
+
     <form class="text-center" action="{{url_for('account.volunteering')}}" method="POST">
         <ul class="list-group">
             <li class="list-group-item">Potato Sack Race</li>
@@ -27,7 +34,7 @@
                     <li class="list-group-item">
                         <label for="potato-sack-race-start">Starting Line</label>
                         <select name="potato-sack-race-start" id="potato-sack-race-start">
-                            <option selected value="">Select Parent</option>
+                            <option selected value>Select Parent</option>
                             {% for parent in volunteering_parents %}
                                 <option value="{{parent}}">{{parent}}</option>
                             {% endfor %}
@@ -36,7 +43,7 @@
                     <li class="list-group-item">
                         <label for="potato-sack-race-end">Ending Line</label>
                         <select name="potato-sack-race-end" id="potato-sack-race-end">
-                            <option selected value="">Select Parent</option>
+                            <option selected value>Select Parent</option>
                             {% for parent in volunteering_parents %}
                                 <option value="{{parent}}">{{parent}}</option>
                             {% endfor %}

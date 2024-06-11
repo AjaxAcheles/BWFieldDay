@@ -5,7 +5,8 @@ from flask import (
     redirect, 
     url_for, 
     session, 
-    g
+    g,
+    flash
 )
 from decorators import *
 from fetch_data import *
@@ -114,7 +115,14 @@ def volunteering():
     elif request.method == 'POST':
         parent_id = get_parent_id()
         number_of_volunteers = len(get_volunteering_parents_with_parent_id(parent_id))
-        if len(request.form) != number_of_volunteers:
-            return render_template_with_session("volunteering.html", error=f"Please choose {number_of_volunteers} events")
+        # get all valid selected events from request.form
+        selected_events = {}
+        for event in request.form.to_dict():
+            if request.form[event] != "":
+                selected_events[event] = request.form[event]
+
+        if len(selected_events) != number_of_volunteers:
+            flash(f"Please choose {number_of_volunteers} events", "error")
+            return redirect(url_for("account.volunteering"))
         else:
-            return [request.form]
+            return [selected_events, number_of_volunteers]
