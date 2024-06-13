@@ -14,9 +14,17 @@ from functions import *
 
 admin_bp = Blueprint('admin', __name__)
 
+
+@admin_bp.route("/admin_login", methods=['GET', 'POST'])
+def login():
+    return render_template_with_session('admin_login.html')
+
+
 @admin_bp.route("/admin_dashboard", methods=['GET', 'POST'])
+@admin_login_required
 def dashboard():
     return render_template_with_session('admin_dashboard.html')
+
 
 
 @admin_bp.route("/admin_manage_events", methods=['GET', 'POST'])

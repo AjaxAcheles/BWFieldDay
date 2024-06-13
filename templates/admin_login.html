@@ -1,0 +1,24 @@
+{% extends "admin_layout.html" %} {% set page_title="Dashboard" %}
+
+{% block content %}
+    <div class="container-fluid row alagn-items-center">
+        <div class="col-md-3"></div> <!--for spacing-->
+        <div class="text-center col-md-4">
+            <form action="{{url_for('admin.login')}}">
+                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                    <label for="floatingPassword">Password</label>
+                </div>
+
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            </form>
+        </div>
+        <div class="col-md-5"></div> <!--for spacing-->
+    </div>
+{% endblock %}
+

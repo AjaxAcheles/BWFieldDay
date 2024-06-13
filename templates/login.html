@@ -21,7 +21,7 @@
 
 
 
-<form class="text-center" action="/login" method="POST">
+<form class="text-center" action="{{url_for('auth.login')}}" method="POST">
     <div>
         <label for="phone-number">Phone Number:</label>
         <input type="tel" name="phone-number" required>
