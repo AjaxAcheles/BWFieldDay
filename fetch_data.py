@@ -25,6 +25,18 @@ def create_parent_info_table():
     connection.commit()
 
 
+def create_admin_info_table():
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("""
+                create table if not EXISTS admin_info (
+                    key TEXT,
+                    value TEXT
+                )
+                """)
+    connection.commit()
+
+
 def create_child_info_table():
     connection = get_db()
     sql = connection.cursor()

@@ -12,14 +12,17 @@ from fetch_data import *
 from auth import *
 from account import *
 from decorators import *
+from admin import *
 
 app = Flask(__name__)
 app.register_blueprint(auth_bp)
 app.register_blueprint(account_bp)
+app.register_blueprint(admin_bp)
 
 with app.app_context():
     create_parent_info_table()
     create_child_info_table()
+    create_admin_info_table()
 
 app.secret_key = "NJMFTGEWTRIOPHGFVFXGDCljkfgtre45tiophufhgyju435u8o9324i09dfhkujg"
 

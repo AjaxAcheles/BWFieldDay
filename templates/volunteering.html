@@ -28,12 +28,12 @@
 
     <form class="text-center" action="{{url_for('account.volunteering')}}" method="POST">
         <ul class="list-group">
-            <li class="list-group-item">Potato Sack Race</li>
+            <li class="list-group-item">Sprint</li>
             <li class="list-group-item">
                 <ul class="list-group translate-middle-x" style="width: 50vw; margin-left: auto">
                     <li class="list-group-item">
-                        <label for="potato-sack-race-start">Starting Line</label>
-                        <select name="potato-sack-race-start" id="potato-sack-race-start">
+                        <label for="sprint-start">Starting Line</label>
+                        <select name="sprint-start" id="sprint-start">
                             <option selected value>Select Parent</option>
                             {% for parent in volunteering_parents %}
                                 <option value="{{parent}}">{{parent}}</option>
@@ -41,8 +41,8 @@
                         </select>
                     </li>
                     <li class="list-group-item">
-                        <label for="potato-sack-race-end">Ending Line</label>
-                        <select name="potato-sack-race-end" id="potato-sack-race-end">
+                        <label for="sprint-end">Ending Line</label>
+                        <select name="sprint-end" id="sprint-end">
                             <option selected value>Select Parent</option>
                             {% for parent in volunteering_parents %}
                                 <option value="{{parent}}">{{parent}}</option>
