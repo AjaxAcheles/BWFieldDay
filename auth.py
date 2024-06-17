@@ -18,7 +18,8 @@ auth_bp = Blueprint('auth', __name__)
 @logged_out_required
 def register():
     if request.method == "GET":
-        return render_template_with_session("register.html", t_shirt_sizes=["Youth S", "Youth M", "Youth L", "Youth XL", "XS", "S", "M", "L", "XL", "XXL", "XXXL"])
+        t_shirt_sizes = get_t_shirt_sizes_from_admin_info()
+        return render_template_with_session("register.html", t_shirt_sizes=t_shirt_sizes)
     
     elif request.method == "POST":
         parent_1_name = request.form.get("parent-1-name").lower()
@@ -57,7 +58,6 @@ def register():
                 is_parent_2_volunteering = True
             else:
                 is_parent_2_volunteering = False
-            print(is_parent_2_volunteering)
 
         # set number_of_children
         number_of_children = int(request.form.get("number-of-children"))

@@ -118,6 +118,17 @@ def get_events_from_admin_info():
     events = json.loads(events_tuple[0])
     return events
 
+
+def get_t_shirt_sizes_from_admin_info():
+    connection = get_db()
+    sql = connection.cursor()
+    t_shirt_sizes_tuple = sql.execute("SELECT value FROM admin_info WHERE key = ?", ("t_shirt_sizes",)).fetchone()
+    t_shirt_sizes_string = t_shirt_sizes_tuple[0][1:-1]
+    t_shirt_sizes_ugly_list = t_shirt_sizes_string.replace('"', "").replace("'", "").split(',')
+    t_shirt_sizes = [size.strip() for size in t_shirt_sizes_ugly_list]
+    return t_shirt_sizes
+
+
 def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children):
     connection = get_db()
     sql = connection.cursor()
@@ -159,7 +170,6 @@ def manage_volunteer_info(event_position_name, volunteer_name, volunteer_parent_
     # check if volunteer already exists. if so then delete position that the volunteer is currently holding then continue the func
     is_volunteer_exists = sql.execute("SELECT * FROM volunteers_info WHERE volunteer_name = ? AND volunteer_parent_id = ?", (volunteer_name, volunteer_parent_id)).fetchall()
     if is_volunteer_exists:
-        print(f"is_volunteer_exists: {is_volunteer_exists}")
         sql.execute("DELETE FROM volunteers_info WHERE volunteer_name = ? AND volunteer_parent_id = ?", (volunteer_name, volunteer_parent_id))
         connection.commit()
     
@@ -186,8 +196,6 @@ def get_occupied_positions():
         volunteer_name = event_position[1]
         occupied_positions_dict[event_position_name] = volunteer_name
     return occupied_positions_dict
-
-
 
 
 def edit_child_info(child_id, child_name, child_age, child_t_shirt_size):

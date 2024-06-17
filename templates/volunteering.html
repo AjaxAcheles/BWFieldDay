@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1 className="home-text">Sign in Here</h1>
+    <h1 className="home-text">Sign up for Volunteering Here</h1>
     <p className="home-text1">Please select {{number_of_volunteers}} events to volunteer for</p>
     {% with flash = get_flashed_messages(category_filter=["error"]) %}
     {% set error = flash[0] %}
