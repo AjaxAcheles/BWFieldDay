@@ -1,0 +1,32 @@
+{% macro show_events(events_dict, volunteering_parents, occupied_positions) %}
+    <ul class="list-group">
+    {% for event_name in events_dict %}
+    {% set event_position = events_dict[event_name] %}
+        <li class="list-group-item text-capitalize">{{event_name}}</li>
+        {% for position_name in event_position %}
+            {% set amount_of_positions = event_position[position_name] %}
+            <li class="list-group-item">
+                <ul class="list-group translate-middle-x" style="width: 50vw; margin-left: auto">
+                    {% for index in range(amount_of_positions) %}
+                        {% set position_index = index + 1 %}
+                        {% set position_id = event_name.replace(" ", "-").lower() + "-" + position_name.replace(" ", "-").lower() + "-" + position_index|string %}
+                        <li class="list-group-item">
+                            {% if position_id in occupied_positions and occupied_positions[position_id] not in volunteering_parents %}
+                                <p class="text-capitalize m-0">{{position_name}} position {{position_index}}: {{occupied_positions[position_id]}}</p>
+                            {% else %}
+                                <label for="{{position_id}}" class="text-capitalize">{{position_name}} position {{position_index}}: </label>
+                                <select name="{{position_id}}" id="{{position_id}}">
+                                    <option {% if occupied_positions[position_id] not in volunteering_parents %} selected {% endif %} value>Select Parent</option>
+                                    {% for parent in volunteering_parents %}
+                                        <option value="{{parent}}" {% if occupied_positions[position_id] == parent %} selected {% endif %}>{{parent}}</option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+{% endmacro %}

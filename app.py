@@ -23,6 +23,7 @@ with app.app_context():
     create_parent_info_table()
     create_child_info_table()
     create_admin_info_table()
+    create_volunteers_info_table()
 
 app.secret_key = "NJMFTGEWTRIOPHGFVFXGDCljkfgtre45tiophufhgyju435u8o9324i09dfhkujg"
 

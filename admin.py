@@ -17,7 +17,10 @@ admin_bp = Blueprint('admin', __name__)
 
 @admin_bp.route("/admin_login", methods=['GET', 'POST'])
 def login():
-    return render_template_with_session('admin_login.html')
+    if request.method == "POST":
+        return request.form
+    elif request.method == "GET":
+        return render_template_with_session('admin_login.html')
 
 
 @admin_bp.route("/admin_dashboard", methods=['GET', 'POST'])
@@ -28,21 +31,25 @@ def dashboard():
 
 
 @admin_bp.route("/admin_manage_events", methods=['GET', 'POST'])
+@admin_login_required
 def manage_events():
     return render_template_with_session("admin_event_management.html")
 
 
 @admin_bp.route("/admin_t_shirt_management", methods=['GET', 'POST'])
+@admin_login_required
 def manage_t_shirts():
     return render_template_with_session("admin_t_shirt_management.html")
 
 
 @admin_bp.route("/admin_manage_or_add_admins", methods=['GET', 'POST'])
+@admin_login_required
 def manage_admins():
     return render_template_with_session("admin_manage_or_add_admins.html")
 
 
 @admin_bp.route("/admin_database_management", methods=['GET', 'POST'])
+@admin_login_required
 def manage_database():
     return render_template_with_session("admin_database_management.html")
 

@@ -28,5 +28,5 @@ def admin_login_required(original_function):
         if session.get('logged_in') and session.get('admin_logged_in'):
             return original_function(*args, **kwargs)
         else:
-            return render_template_with_session("admin_login.html", error="You are not logged in as an admin")
+            return redirect(url_for('admin.login'))
     return decorated_function

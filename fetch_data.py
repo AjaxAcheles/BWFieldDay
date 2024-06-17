@@ -31,7 +31,20 @@ def create_admin_info_table():
     sql.execute("""
                 create table if not EXISTS admin_info (
                     key TEXT,
-                    value TEXT
+                    value BLOB
+                )
+                """)
+    connection.commit()
+
+
+def create_volunteers_info_table():
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("""
+                create table if not EXISTS volunteers_info (
+                    event_position_name TEXT PRIMARY KEY,
+                    volunteer_name TEXT,
+                    volunteer_parent_id INTEGER
                 )
                 """)
     connection.commit()
@@ -77,6 +90,11 @@ def get_child_info():
     sql = connection.cursor()
     return sql.execute("SELECT * FROM child_info").fetchall()
 
+def get_volunteers_info():
+    connection = get_db()
+    sql = connection.cursor()
+    return sql.execute("SELECT * FROM volunteers_info").fetchall()
+
 def get_children_info_with_parent_id(parent_id):
     connection = get_db()
     sql = connection.cursor()
@@ -87,6 +105,18 @@ def get_children_info_with_parent_id(parent_id):
         children_info_dict.append(child_dict)
     return children_info_dict
 
+def get_value_from_admin_info(key):
+    connection = get_db()
+    sql = connection.cursor()
+    value = sql.execute("SELECT value FROM admin_info WHERE key = ?", (key,)).fetchone()
+    return value
+
+def get_events_from_admin_info():
+    connection = get_db()
+    sql = connection.cursor()
+    events_tuple = sql.execute("SELECT value FROM admin_info WHERE key = ?", ("events",)).fetchone()
+    events = json.loads(events_tuple[0])
+    return events
 
 def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children):
     connection = get_db()
@@ -121,6 +151,41 @@ def insert_child_info(child_name, child_age, child_t_shirt_size, parent_id):
     connection.commit()
     child_id = sql.lastrowid
     return child_id
+
+
+def manage_volunteer_info(event_position_name, volunteer_name, volunteer_parent_id):
+    connection = get_db()
+    sql = connection.cursor()
+    # check if volunteer already exists. if so then delete position that the volunteer is currently holding then continue the func
+    is_volunteer_exists = sql.execute("SELECT * FROM volunteers_info WHERE volunteer_name = ? AND volunteer_parent_id = ?", (volunteer_name, volunteer_parent_id)).fetchall()
+    if is_volunteer_exists:
+        print(f"is_volunteer_exists: {is_volunteer_exists}")
+        sql.execute("DELETE FROM volunteers_info WHERE volunteer_name = ? AND volunteer_parent_id = ?", (volunteer_name, volunteer_parent_id))
+        connection.commit()
+    
+    # manage info 
+    try:
+        sql.execute("""INSERT INTO volunteers_info (event_position_name, volunteer_name, volunteer_parent_id)
+                VALUES (?, ?, ?)""", 
+                (event_position_name, volunteer_name, volunteer_parent_id)
+                )
+    except:
+        sql.execute("""UPDATE volunteers_info SET volunteer_name = ?, volunteer_parent_id = ? WHERE event_position_name = ?""", 
+                (event_position_name, volunteer_name, volunteer_parent_id)
+                )
+    connection.commit()
+
+
+def get_occupied_positions():
+    connection = get_db()
+    sql = connection.cursor()
+    occupied_positions = sql.execute("SELECT event_position_name, volunteer_name FROM volunteers_info").fetchall()
+    occupied_positions_dict = {}
+    for event_position in occupied_positions:
+        event_position_name = event_position[0].replace("_", "-")
+        volunteer_name = event_position[1]
+        occupied_positions_dict[event_position_name] = volunteer_name
+    return occupied_positions_dict
 
 
 

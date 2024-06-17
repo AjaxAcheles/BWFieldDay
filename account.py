@@ -8,6 +8,7 @@ from flask import (
     g,
     flash
 )
+import json
 from decorators import *
 from fetch_data import *
 from functions import *
@@ -21,7 +22,6 @@ def edit_info():
     if request.method == 'GET':
         parent_info = get_parent_info_with_parent_id(session["parent_id"])
         children_info = get_children_info_with_parent_id(session["parent_id"])
-        #return [parent_info, children_info]
         return render_template_with_session("edit_info.html", parent_info=parent_info, children_info=children_info, t_shirt_sizes=["Youth S", "Youth M", "Youth L", "Youth XL", "XS", "S", "M", "L", "XL", "XXL", "XXXL"])
     
     elif request.method == 'POST':
@@ -85,7 +85,6 @@ def edit_info():
                     child_t_shirt_size = None
                 child_id = insert_child_info(child_name, child_age, child_t_shirt_size, session["parent_id"])
                 add_child(child_name, child_id)
-                print(session["children_id"])
                 continue
 
             child_age = int(request.form.get(f"child-{index}-age"))
@@ -110,7 +109,9 @@ def volunteering():
     if request.method == 'GET':
         parent_id = get_parent_id()
         volunteering_parents = get_volunteering_parents_with_parent_id(parent_id)
-        return render_template_with_session("volunteering.html", volunteering_parents=volunteering_parents)
+        events = get_events_from_admin_info()
+        occupied_positions = get_occupied_positions()
+        return render_template_with_session("volunteering.html", events=events, volunteering_parents=volunteering_parents, occupied_positions=occupied_positions)
     
     elif request.method == 'POST':
         parent_id = get_parent_id()
@@ -120,9 +121,26 @@ def volunteering():
         for event in request.form.to_dict():
             if request.form[event] != "":
                 selected_events[event] = request.form[event]
-
+        
+        # check if there are any keys with the same values
+        seen_values = []
+        for event, position in selected_events.items():
+            if position in seen_values:
+                flash(f"Please choose different events for each volunteer", "error")
+                return redirect(url_for("account.volunteering"))
+            seen_values.append(position)
+        del seen_values
+        
+        # check if number of volunteers is equal to number of selected events
         if len(selected_events) != number_of_volunteers:
             flash(f"Please choose {number_of_volunteers} events", "error")
             return redirect(url_for("account.volunteering"))
         else:
-            return [selected_events, number_of_volunteers]
+            for event in selected_events:
+                event_position_name = event.replace("-", "_")
+                volunteer_name = selected_events[event]
+                volunteer_parent_id =  get_parent_id()
+                # insert volunteer info into the database
+                manage_volunteer_info(event_position_name, volunteer_name, volunteer_parent_id)
+            return redirect(url_for("account.volunteering"))
+

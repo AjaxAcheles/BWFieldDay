@@ -41,7 +41,7 @@ def register():
             is_parent_1_volunteering = False
         # parent 2 name
         parent_2_name = request.form.get("parent-2-name").lower()
-        if parent_2_name.replace(" ", "") != "" or request.form.get("is-parent-2") == "false":
+        if parent_2_name.replace(" ", "") == "" or request.form.get("is-parent-2") == "false":
             parent_2_name = None
             parent_2_t_shirt_size = None
             is_parent_2_volunteering = None
@@ -57,6 +57,7 @@ def register():
                 is_parent_2_volunteering = True
             else:
                 is_parent_2_volunteering = False
+            print(is_parent_2_volunteering)
 
         # set number_of_children
         number_of_children = int(request.form.get("number-of-children"))

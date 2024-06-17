@@ -1,5 +1,7 @@
 {% extends "layout.html" %} {% set page_title="Volunteering Registration" %}
 
+{% from "macros.html" import show_events %}
+
 {% block heading %}
     <h1>BW Field Day Volunteering Registration</h1>
     <p>Please fill out the form below to register for volunteering for BW Field Day.</p>
@@ -27,31 +29,7 @@
     {% endwith %}
 
     <form class="text-center" action="{{url_for('account.volunteering')}}" method="POST">
-        <ul class="list-group">
-            <li class="list-group-item">Sprint</li>
-            <li class="list-group-item">
-                <ul class="list-group translate-middle-x" style="width: 50vw; margin-left: auto">
-                    <li class="list-group-item">
-                        <label for="sprint-start">Starting Line</label>
-                        <select name="sprint-start" id="sprint-start">
-                            <option selected value>Select Parent</option>
-                            {% for parent in volunteering_parents %}
-                                <option value="{{parent}}">{{parent}}</option>
-                            {% endfor %}
-                        </select>
-                    </li>
-                    <li class="list-group-item">
-                        <label for="sprint-end">Ending Line</label>
-                        <select name="sprint-end" id="sprint-end">
-                            <option selected value>Select Parent</option>
-                            {% for parent in volunteering_parents %}
-                                <option value="{{parent}}">{{parent}}</option>
-                            {% endfor %}
-                        </select>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        {{ show_events(events, volunteering_parents, occupied_positions) }}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     {% if error %}
