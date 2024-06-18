@@ -1,6 +1,6 @@
 {% extends "layout.html" %} {% set page_title="Volunteering Registration" %}
 
-{% from "macros.html" import show_events %}
+{% from "macros.html" import show_events_as_form %}
 
 {% block heading %}
     <h1>BW Field Day Volunteering Registration</h1>
@@ -28,10 +28,8 @@
     {% endif %}
     {% endwith %}
 
-    <form class="text-center" action="{{url_for('account.volunteering')}}" method="POST">
-        {{ show_events(events, volunteering_parents, occupied_positions) }}
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    {{ show_events_as_form(events, volunteering_parents, occupied_positions, url_for('account.volunteering')) }}
+        
     {% if error %}
     <script>
         $(document).change(function() {

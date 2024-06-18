@@ -31,9 +31,14 @@ def dashboard():
 
 
 @admin_bp.route("/admin_manage_events", methods=['GET', 'POST'])
-@admin_login_required
+# @admin_login_required
 def manage_events():
-    return render_template_with_session("admin_event_management.html")
+    if request.method == 'GET':
+        events = get_events_from_admin_info()
+        occupied_positions = get_occupied_positions()
+        return render_template_with_session("admin_event_management.html", events=events, occupied_positions=occupied_positions)
+    else:
+        return request.form
 
 
 @admin_bp.route("/admin_t_shirt_management", methods=['GET', 'POST'])
