@@ -3,6 +3,7 @@
 {% from "macros.html" import show_events_to_admin %}
 
 {% block content %}
+    <h1 class="text-center my-5">Manage Events</h1>
     <form action="{{url_for('admin.manage_events')}}" method="POST">
         <ul class="list-group text-start">
         {% for event_name in events %}
@@ -87,7 +88,6 @@
         </ul>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-    
     
     <script>
         function removeEvent(clicked) {

@@ -118,6 +118,14 @@ def get_events_from_admin_info():
     events = json.loads(events_tuple[0])
     return events
 
+def update_events_in_admin_info(events):
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("UPDATE admin_info SET value = ? WHERE key = ?", (json.dumps(events), "events"))
+    connection.commit()
+
+
+
 
 def get_t_shirt_sizes_from_admin_info():
     connection = get_db()

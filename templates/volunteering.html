@@ -30,7 +30,7 @@
 
     {{ show_events_as_form(events, volunteering_parents, occupied_positions, url_for('account.volunteering')) }}
         
-    {% if error %}
+    {% if error or message %}
     <script>
         $(document).change(function() {
             fadeOut();

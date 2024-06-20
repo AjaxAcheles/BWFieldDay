@@ -17,6 +17,20 @@
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      {% with flash = get_flashed_messages(category_filter=["error"]) %}
+      {% set error = flash[0] %}
+      {% if error %}
+          <p class="m-0 bg-secondary form-control form-control-dark w-100 text-danger" id="error-message">{{ error }}</p>
+      {% endif %}
+      {% endwith %}
+      
+      {% with flash = get_flashed_messages(category_filter=["message"]) %}
+      {% set message = flash[0] %}
+      {% if message %}
+          <p class="m-0 bg-secondary form-control form-control-dark w-100 text-primary" id="message">{{ message }}</p>
+      {% endif %}
+      {% endwith %}
+      
       <div class="navbar-nav">
         <div class="nav-item text-nowrap">
           <a class="nav-link px-3" href="{{url_for('auth.logout')}}">Sign out</a>
