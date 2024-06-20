@@ -1,0 +1,10 @@
+{% extends "admin_layout.html" %} {% set page_title="Dashboard" %}
+
+{% block content %}
+    <h1 class="text-center mt-5 mb-3">T-Shirts</h1>
+    <div class="text-center">
+        {% for t_shirt_size in all_t_shirts %}
+            <p class="m-0 p-0 text-center">{{t_shirt_size}}:    {{all_t_shirts[t_shirt_size]}}</p>
+        {% endfor %}
+    </div>
+{% endblock %}

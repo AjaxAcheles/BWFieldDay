@@ -30,3 +30,12 @@ def admin_login_required(original_function):
         else:
             return redirect(url_for('admin.login'))
     return decorated_function
+
+def admin_logged_out_required(original_function):
+    @wraps(original_function)
+    def decorated_function(*args, **kwargs):
+        if session.get('admin_logged_in') is not True:
+            return original_function(*args, **kwargs)
+        else:
+            return redirect(url_for('admin.dashboard'))
+    return decorated_function

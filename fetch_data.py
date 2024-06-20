@@ -91,6 +91,18 @@ def get_email_with_parent_id(parent_id):
         return email[0]
     else:
         return None
+    
+def get_parent_t_shirts():
+    connection = get_db()
+    sql = connection.cursor()
+    t_shirts = sql.execute("SELECT parent_1_t_shirt_size, parent_2_t_shirt_size FROM parent_info").fetchall()
+    return t_shirts
+
+def get_child_t_shirts():
+    connection = get_db()
+    sql = connection.cursor()
+    t_shirts = sql.execute("SELECT child_t_shirt_size FROM child_info").fetchall()
+    return t_shirts
 
 
 def get_child_info():
