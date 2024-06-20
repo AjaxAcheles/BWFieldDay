@@ -18,7 +18,37 @@ admin_bp = Blueprint('admin', __name__)
 @admin_bp.route("/admin_login", methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        return request.form
+        # if not already logged in
+        if not is_logged_in():
+            phone_number = request.form.get("phone-number")
+            ids_dict = get_parent_id_and_children_id_with_phone_number(phone_number)
+            # if valid then set logged in and continue
+            if ids_dict:
+                set_logged_in(ids_dict["parent_id"], ids_dict["children_info_dict"])
+            else:
+                # if entered phone number is not valid then return error
+                flash("Invalid phone number", "error")
+                return redirect(url_for("admin.login"))
+        else: 
+            # if entered phone number is not valid then return error
+            if not get_phone_number_with_parent_id(get_parent_id()):
+                flash("Invalid phone number", "error")
+                return redirect(url_for("admin.login"))
+            
+        # check matching email 
+        if get_email_with_parent_id(get_parent_id()) != request.form.get("email"):
+            flash("Invalid email", "error")
+            return redirect(url_for("admin.login"))
+            
+        # check for valid admin credentials 
+        if is_valid_admin(request.form.get("email"), request.form.get("password")) is True:
+            set_admin_logged_in(request.form.get("email"))
+            flash(f"Login successful.", "message")
+            return redirect(url_for("admin.dashboard"))
+        else:
+            flash("Invalid email or password", "error")
+            return redirect(url_for("admin.login"))
+
     elif request.method == "GET":
         return render_template_with_session('admin_login.html')
 
@@ -29,9 +59,8 @@ def dashboard():
     return render_template_with_session('admin_dashboard.html')
 
 
-
 @admin_bp.route("/admin_manage_events", methods=['GET', 'POST'])
-# @admin_login_required
+@admin_login_required
 def manage_events():
     if request.method == 'GET':
         events = get_events_from_admin_info()

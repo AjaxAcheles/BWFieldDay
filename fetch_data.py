@@ -83,6 +83,14 @@ def get_parent_info_with_parent_id(parent_id):
         parent_info_list[0]["is_parent_2_volunteering"] = False
     return parent_info_list[0]
 
+def get_email_with_parent_id(parent_id):
+    connection = get_db()
+    sql = connection.cursor()
+    email = sql.execute("SELECT parent_email FROM parent_info WHERE parent_id = ?", (parent_id,)).fetchone()
+    if email:
+        return email[0]
+    else:
+        return None
 
 
 def get_child_info():
@@ -125,6 +133,26 @@ def update_events_in_admin_info(events):
     connection.commit()
 
 
+def add_valid_admin(email, password):
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("INSERT INTO admin_info (key, value) VALUES (?, ?)", ("admin", json.dumps({"email": email, "password": password})))
+    connection.commit()
+
+
+def is_valid_admin(email, password):
+    email = email.lower().strip()
+    password = password.strip()
+    connection = get_db()
+    sql = connection.cursor()
+    admin_info = sql.execute("SELECT * FROM admin_info WHERE key = ?", ("admin",)).fetchall()
+    for admin in admin_info:
+        credentials_dict = json.loads(admin[1])
+        admin_email = credentials_dict["email"]
+        admin_password = credentials_dict["password"]
+        if admin_email == email and admin_password == password:
+            return True
+    return False
 
 
 def get_t_shirt_sizes_from_admin_info():
@@ -225,6 +253,18 @@ def get_parent_id_with_email(parent_email):
         return parent_id[0]
     else:
         return None
+
+
+def get_phone_number_with_parent_id(parent_id):
+    connection = get_db()
+    sql = connection.cursor()
+    phone_number = sql.execute("SELECT parent_phone_number FROM parent_info WHERE parent_id = ?", (parent_id,)).fetchone()
+    if phone_number:
+        return phone_number[0]
+    else:
+        return None
+
+
 
 def get_parent_id_and_children_id_with_phone_number(parent_phone_number):
     connection = get_db()

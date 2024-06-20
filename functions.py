@@ -39,3 +39,15 @@ def add_child(name, child_id):
     children_id[name] = child_id
     session["children_id"] = children_id
     
+
+def set_admin_logged_in(email):
+    session["admin_logged_in"] = True
+    session["email"] = email
+
+
+def is_admin_logged_in():
+    return session.get("admin_logged_in")
+
+def set_admin_logged_out():
+    session.clear()
+
