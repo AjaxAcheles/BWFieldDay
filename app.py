@@ -22,8 +22,8 @@ app.register_blueprint(admin_bp)
 with app.app_context():
     create_parent_info_table()
     create_child_info_table()
-    create_admin_info_table()
     create_volunteers_info_table()
+    create_admin_info_table()
 
 app.secret_key = "NJMFTGEWTRIOPHGFVFXGDCljkfgtre45tiophufhgyju435u8o9324i09dfhkujg"
 
@@ -37,6 +37,3 @@ def frequently_asked_questions():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-    ##### add a remove parent feature

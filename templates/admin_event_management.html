@@ -189,12 +189,12 @@
         }
 
         function addPosition(clicked) {
-            roleId = $(clicked.currentTarget).closest('ul').closest('li').attr('id').substring(5);
-            positionId = `${eventId}-${roleId}`
             var linkedInput = `${clicked.currentTarget.dataset.linkedinputid}`;
-            positionIndex = $(clicked.currentTarget).closest('ul').children().each(function () {
-                // find the lowest positive positionIndex 
-            });
+            var eventId = $(clicked.currentTarget).closest('ul').closest('li').closest('ul').closest('li').attr('id').substring(6);
+            var roleId = $(clicked.currentTarget).closest('ul').closest('li').attr('id').substring(5);
+            var positionIdNoIndex = `${eventId}-${roleId}`
+            var positionIndex = $(clicked.currentTarget).closest('ul').children().length;
+            var positionId = `${positionIdNoIndex}-${positionIndex}`;
 
             innerHTML = `
                 <li class="list-group-item bg-dark text-white position-container" id="position-${positionId}">

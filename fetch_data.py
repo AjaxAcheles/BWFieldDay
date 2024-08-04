@@ -25,7 +25,7 @@ def create_parent_info_table():
     connection.commit()
 
 
-def create_admin_info_table():
+def create_admin_info_table(current_admin_info=None):
     connection = get_db()
     sql = connection.cursor()
     sql.execute("""
@@ -35,6 +35,17 @@ def create_admin_info_table():
                 )
                 """)
     connection.commit()
+    print("select empty table", sql.execute("SELECT * FROM admin_info").fetchall())
+    if sql.execute("SELECT * FROM admin_info").fetchall() == []:
+        insert_into_event_table("events", {"Empty Event": {"Empty Position": 1}})
+        insert_into_event_table("t_shirt_sizes", ["Youth S", "Youth M", "Youth L", "Youth XL", "XS", "S", "M", "L", "XL", "XXL", "XXXL"])
+        if current_admin_info is None:
+            insert_into_event_table("admin", {"email": "imargo4507@outlook.com", "password": "imargo4507"})
+            insert_into_event_table("admin", {"email": "huiwon1280@hotmail.com", "password": "huiwon1280"})
+        else:
+            insert_into_event_table("admin", {"email": current_admin_info[0], "password": current_admin_info[1]})
+
+   
 
 
 def create_volunteers_info_table():
@@ -176,6 +187,12 @@ def get_t_shirt_sizes_from_admin_info():
     t_shirt_sizes = [size.strip() for size in t_shirt_sizes_ugly_list]
     return t_shirt_sizes
 
+def insert_into_event_table(key, value):
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("INSERT INTO admin_info (key, value) VALUES (?, ?)", (key, json.dumps(value)))
+    connection.commit()
+
 
 def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children):
     connection = get_db()
@@ -276,6 +293,18 @@ def get_phone_number_with_parent_id(parent_id):
     else:
         return None
 
+def get_admin_password_with_email(email):
+    connection = get_db()
+    sql = connection.cursor()
+    accounts = sql.execute("SELECT * FROM admin_info WHERE key = 'admin'").fetchall()
+    if accounts:
+        for account in accounts:
+            credentials_dict = json.loads(account[1])
+            if credentials_dict["email"] == email:
+                return credentials_dict["password"]
+    else:
+        return None
+
 
 
 def get_parent_id_and_children_id_with_phone_number(parent_phone_number):
@@ -309,6 +338,14 @@ def get_volunteering_parents_with_parent_id(parent_id):
         return volunteering_parents_list
     else:
         return None
+    
+
+def get_family(parent_id):
+    connection = get_db()
+    sql = connection.cursor()
+    parents = sql.execute("SELECT * FROM parent_info WHERE parent_id = ?", (parent_id,)).fetchone()
+    children = sql.execute("SELECT * FROM child_info WHERE parent_id = ?", (parent_id,)).fetchall()
+    return {"parents": parents, "children": children}
 
 
 def is_parent_exits(parent_phone_number):
@@ -321,3 +358,20 @@ def is_parent_exits(parent_phone_number):
     else:
         return False    
 
+def reset_all_databases(current_admin_info):
+    connection = get_db()
+    sql = connection.cursor()
+
+    # get all tables in database.
+    sql.execute("DROP TABLE IF EXISTS parent_info")
+    sql.execute("DROP TABLE IF EXISTS child_info")
+    sql.execute("DROP TABLE IF EXISTS volunteers_info")
+    sql.execute("DROP TABLE IF EXISTS admin_info")
+    connection.commit()
+    create_parent_info_table()
+    create_child_info_table()
+    create_volunteers_info_table()
+    create_admin_info_table(current_admin_info)
+    connection.commit()
+
+    

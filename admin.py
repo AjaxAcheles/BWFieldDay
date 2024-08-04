@@ -151,6 +151,38 @@ def manage_admins():
 @admin_bp.route("/admin_database_management", methods=['GET', 'POST'])
 @admin_login_required
 def manage_database():
-    return render_template_with_session("admin_database_management.html")
+    if request.method == "GET":
+        return render_template_with_session("admin_database_management.html")
+    elif request.method == "POST":
+        # save the destroyer's family
+        family = get_family(session["parent_id"])
+
+        # reset the database
+        current_admin_info = [session["email"], get_admin_password_with_email(session["email"])]
+        reset_all_databases(current_admin_info)
+
+        # ressurect the destroyer's family
+        parents = family["parents"]
+        children = family["children"]
+
+        parent_1_name = parents[1]
+        parent_email = parents[2]
+        parent_phone_number = parents[3]
+        parent_1_t_shirt_size = parents[4]
+        is_parent_1_volunteering = parents[5]
+        parent_2_name = parents[6]
+        parent_2_t_shirt_size = parents[7]
+        is_parent_2_volunteering = parents[8]
+        number_of_children = parents[9]
+        insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children)
+        
+        for child in children:
+            child_name = child[1]
+            child_age = child[2] 
+            child_t_shirt_size = child[3]
+            parent_id = child[4]
+            insert_child_info(child_name, child_age, child_t_shirt_size, parent_id)
+
+        return redirect(url_for("admin.dashboard"))
 
 
