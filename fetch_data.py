@@ -35,7 +35,6 @@ def create_admin_info_table(current_admin_info=None):
                 )
                 """)
     connection.commit()
-    print("select empty table", sql.execute("SELECT * FROM admin_info").fetchall())
     if sql.execute("SELECT * FROM admin_info").fetchall() == []:
         insert_into_event_table("events", {"Empty Event": {"Empty Position": 1}})
         insert_into_event_table("t_shirt_sizes", ["Youth S", "Youth M", "Youth L", "Youth XL", "XS", "S", "M", "L", "XL", "XXL", "XXXL"])
