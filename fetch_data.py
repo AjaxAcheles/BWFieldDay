@@ -177,6 +177,34 @@ def is_valid_admin(email, password):
     return False
 
 
+def is_admin(email):
+    email = email.lower().strip()
+    connection = get_db()
+    sql = connection.cursor()
+    admin_info = sql.execute("SELECT * FROM admin_info WHERE key = ?", ("admin",)).fetchall()
+    for admin in admin_info:
+        credentials_dict = json.loads(admin[1])
+        admin_email = credentials_dict["email"]
+        if admin_email == email:
+            return True
+    return False
+
+
+def remove_admin(email, password):
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("DELETE FROM admin_info WHERE key = 'admin' AND value = ?", (json.dumps({"email": email, "password": password}),))
+    connection.commit()
+
+
+def remove_admin_blind(email):
+    connection = get_db()
+    sql = connection.cursor()
+    # delete account without knowing the password.
+    sql.execute("DELETE FROM admin_info WHERE key = 'admin' AND value LIKE ?", ('%' + email + '%',))
+    connection.commit()
+
+
 def get_t_shirt_sizes_from_admin_info():
     connection = get_db()
     sql = connection.cursor()

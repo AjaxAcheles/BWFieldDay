@@ -20,14 +20,14 @@
       {% with flash = get_flashed_messages(category_filter=["error"]) %}
       {% set error = flash[0] %}
       {% if error %}
-          <p class="m-0 bg-secondary form-control form-control-dark w-100 text-danger" id="error-message">{{ error }}</p>
+          <p class="m-0 bg-light form-control form-control-dark w-100 text-danger" id="error-message">{{ error }}</p>
       {% endif %}
       {% endwith %}
       
       {% with flash = get_flashed_messages(category_filter=["message"]) %}
       {% set message = flash[0] %}
       {% if message %}
-          <p class="m-0 bg-secondary form-control form-control-dark w-100 text-primary" id="message">{{ message }}</p>
+          <p class="m-0 bg-light form-control form-control-dark w-100 text-primary" id="message">{{ message }}</p>
       {% endif %}
       {% endwith %}
       

@@ -31,7 +31,7 @@ def login():
                 flash("Invalid phone number", "error")
                 return redirect(url_for("admin.login"))
         else: 
-            # if entered phone number is not valid then return error
+            # if entered phone number is not valid then return error and stop 
             if not get_phone_number_with_parent_id(get_parent_id()):
                 flash("Invalid phone number", "error")
                 return redirect(url_for("admin.login"))
@@ -45,6 +45,14 @@ def login():
         if is_valid_admin(request.form.get("email"), request.form.get("password")) is True:
             set_admin_logged_in(request.form.get("email"))
             flash(f"Login successful.", "message")
+            return redirect(url_for("admin.dashboard"))
+        # check if this is first time logging in
+        elif is_admin(request.form.get("email")) is True:
+            # remove old placeholder admin where password was none and replace with new password
+            remove_admin(request.form.get("email"), None)
+            add_valid_admin(request.form.get("email"), request.form.get("password"))
+            set_admin_logged_in(request.form.get("email"))
+            flash(f"Congrats, this is your FIRST successful login! Your password has been set.", "message")
             return redirect(url_for("admin.dashboard"))
         else:
             flash("Invalid email or password", "error")
@@ -145,7 +153,40 @@ def manage_t_shirts():
 @admin_bp.route("/admin_manage_or_add_admins", methods=['GET', 'POST'])
 @admin_login_required
 def manage_admins():
-    return render_template_with_session("admin_manage_or_add_admins.html")
+    if request.method == "GET":
+        return render_template_with_session("admin_manage_or_add_admins.html")
+    elif request.method == "POST":
+        if request.form.get("type") == "add":
+            email = request.form.get("email")
+            phone_number = request.form.get("phone-number")
+            # Check to see if account is already an admin
+            if is_admin(email) is True:
+                flash(f"Admin account already exists.", "message")
+                return redirect(url_for("admin.manage_admins"))
+            # Check to see if base account even exists
+            elif is_parent_exits(phone_number) is False:
+                flash(f"Account doen't exist.", "message")
+                return redirect(url_for("admin.manage_admins"))
+            # Add admin
+            else:
+                add_valid_admin(email, None)
+                flash(f"Admin account added successfully! The new admin will be prompted to create a password upon first login to their ADMIN DASHBOARD", "message")
+                return redirect(url_for("admin.manage_admins"))
+        elif request.form.get("type") == "remove":
+            email = request.form.get("email")
+            phone_number = request.form.get("phone-number")
+            # Check to see if base account even exists
+            if is_parent_exits(phone_number) is False:
+                flash(f"Account doen't exist.", "message")
+                return redirect(url_for("admin.manage_admins"))
+            # Check to see if account is not an admin
+            elif is_admin(email) is False:
+                flash(f"Account not an admin level account.", "message")
+                return redirect(url_for("admin.manage_admins"))
+            else:
+                remove_admin_blind(email)
+                flash(f"Admin account removed successfully!", "message")
+
 
 
 @admin_bp.route("/admin_database_management", methods=['GET', 'POST'])

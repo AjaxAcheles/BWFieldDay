@@ -1,0 +1,43 @@
+{% extends "admin_layout.html" %} {% set page_title="Dashboard" %}
+
+{% block content %}
+    <div class="container-fluid row alagn-items-center">
+        <div class="col-md-3"></div> <!--for spacing-->
+        <div class="text-center col-md-4">
+            <form action="{{url_for('admin.manage_admins')}}" method="POST">
+                <h1 class="h3 mb-3 fw-normal text-capilaize">Enter the email and phone number of the account you want to promote to an admin.</h1>
+                <p class="h6 my-3 fw-normal text-danger">Please note that the account MUST exist prior to being promoted to an admin. Ensure sure that the person you want to add as an admin already has an account.</p>
+                <input type="hidden" name="type" value="add">
+                <div class="form-floating">
+                    <input type="email" class="form-control" name="email" required>
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating">
+                    <input type="tel" class="form-control" name="phone-number" required>
+                    <label for="floatingInput">Phone Number</label>
+                </div>
+                <p class="h6 mb-4 mt-5 fw-normal text-danger">Please note that pressing this button will allow the elevated account to see and control everything you can.</p>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Add Admin</button>
+            </form>
+            <br>
+            <br>
+            <form action="{{url_for('admin.manage_admins')}}" method="POST">
+                <h1 class="h3 mb-3 fw-normal text-capilaize">Enter the email and phone number of the account you want to demote to a regular account.</h1>
+                <p class="h6 my-3 fw-normal text-danger">Please note that the account MUST exist AND be an admin prior to being demoted to a regular account.</p>
+                <input type="hidden" name="type" value="remove">
+                <div class="form-floating">
+                    <input type="email" class="form-control" name="email" required>
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating">
+                    <input type="tel" class="form-control" name="phone-number" required>
+                    <label for="floatingInput">Phone Number</label>
+                </div>
+                <p class="h6 mb-4 mt-5 fw-normal text-danger">Please note that pressing this button will completely remove ALL admin privileges from the account.</p>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Remove Admin</button>
+            </form>
+        </div>
+        <div class="col-md-5"></div> <!--for spacing-->
+    </div>
+{% endblock %}
+
