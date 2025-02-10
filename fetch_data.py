@@ -385,6 +385,21 @@ def is_parent_exits(parent_phone_number):
     else:
         return False    
 
+
+def get_all_tables():
+    connection = get_db()
+    sql = connection.cursor()
+    database_dict = {}
+    tables = sql.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall() 
+    tables = [table[0] for table in tables]
+    for table in tables:
+        rows = sql.execute("SELECT * FROM " + table).fetchall()
+        database_dict[table] = rows
+    print(database_dict)
+    return database_dict
+
+
+
 def reset_all_databases(current_admin_info):
     connection = get_db()
     sql = connection.cursor()

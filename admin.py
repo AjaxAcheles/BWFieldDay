@@ -30,11 +30,11 @@ def login():
                 # if entered phone number is not valid then return error
                 flash("Invalid phone number", "error")
                 return redirect(url_for("admin.login"))
-        else: 
-            # if entered phone number is not valid then return error and stop 
-            if not get_phone_number_with_parent_id(get_parent_id()):
-                flash("Invalid phone number", "error")
-                return redirect(url_for("admin.login"))
+        
+        # if entered phone number is not valid then return error and stop 
+        if not get_phone_number_with_parent_id(get_parent_id()):
+            flash("Invalid phone number", "error")
+            return redirect(url_for("admin.login"))
             
         # check matching email 
         if get_email_with_parent_id(get_parent_id()) != request.form.get("email"):
@@ -193,7 +193,9 @@ def manage_admins():
 @admin_login_required
 def manage_database():
     if request.method == "GET":
-        return render_template_with_session("admin_database_management.html")
+        # Get all tables from database.db and store them in a Json-style python dict.
+        tables = get_all_tables()
+        return render_template_with_session("admin_database_management.html", tables=tables)
     elif request.method == "POST":
         # save the destroyer's family
         family = get_family(session["parent_id"])
@@ -201,7 +203,7 @@ def manage_database():
         # reset the database
         current_admin_info = [session["email"], get_admin_password_with_email(session["email"])]
         reset_all_databases(current_admin_info)
-
+        
         # ressurect the destroyer's family
         parents = family["parents"]
         children = family["children"]

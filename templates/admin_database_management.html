@@ -35,6 +35,35 @@
         </div> 
     </form>
 
+
+{% for table in tables %}
+    <div class="container-fluid my-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8">
+                <h3 class="text-center mb-3">Data Topic: {{ table }}</h3>
+                {% for row in tables[table] %}
+                    {% if row[0] != "admin" %}
+                    <ul class="list-group mb-3 d-flex justify-content-center list-group-horizontal">
+                        {% for item in row %}
+                            <li class="list-group-item flex-fill text-center">{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <ul class="list-group mb-3 d-flex justify-content-center list-group-horizontal">
+                        <li class="list-group-item flex-fill text-center">admin_credentials</li>
+                        <li class="list-group-item flex-fill text-center text-danger">REDACTED</li>
+                    </ul>
+                    {% endif %}
+                    
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+
+        
+
     <script>
         function confirmReset() {
             if (confirm("Are you sure you want to reset the database? This action cannot be undone. It may also cause bugs to occor for any users currently using the website.")) {
