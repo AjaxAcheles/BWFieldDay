@@ -32,12 +32,12 @@ def login():
                 return redirect(url_for("admin.login"))
         
         # if entered phone number is not valid then return error and stop 
-        if not get_phone_number_with_parent_id(get_parent_id()):
+        if str(get_phone_number_with_parent_id(get_parent_id())) != str(request.form.get("phone-number")):
             flash("Invalid phone number", "error")
             return redirect(url_for("admin.login"))
             
         # check matching email 
-        if get_email_with_parent_id(get_parent_id()) != request.form.get("email"):
+        if str(get_email_with_parent_id(get_parent_id())) != str(request.form.get("email")):
             flash("Invalid email", "error")
             return redirect(url_for("admin.login"))
             
