@@ -102,6 +102,17 @@ def update_event_role_ids(event_id, role_ids):
     connection.commit()
     connection.close()
 
+def get_max_event_id():
+    connection = get_db()
+    cursor = connection.cursor()
+    cursor.execute("SELECT MAX(event_id) AS max_id FROM events")
+    max_id = cursor.fetchone()[0]
+    connection.close()
+    if max_id is None:
+        return 0
+    else:
+        return max_id
+
 # ––– Role Functions –––
 
 def add_role(event_id, role_name):
@@ -174,6 +185,17 @@ def get_role(role_id):
     connection.close()
     return role
 
+def get_max_role_id():
+    connection = get_db()
+    cursor = connection.cursor()
+    cursor.execute("SELECT MAX(role_id) AS max_id FROM roles")
+    max_id = cursor.fetchone()[0]
+    connection.close()
+    if max_id is None:
+        return 0
+    else:
+        return max_id
+
 # ––– Position Functions ––– 
 
 def add_position(role_id, position_holder_name):
@@ -233,6 +255,17 @@ def get_position(position_id):
     position = cursor.fetchone()
     connection.close()
     return position
+
+def get_max_position_id():
+    connection = get_db()
+    cursor = connection.cursor()
+    cursor.execute("SELECT MAX(position_id) AS max_id FROM positions")
+    max_id = cursor.fetchone()[0]
+    connection.close()
+    if max_id is None:
+        return 0
+    else:
+        return max_id
 
 
 # ––– Retrieval: Nested Data for Templates –––

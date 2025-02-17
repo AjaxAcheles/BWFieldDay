@@ -16,7 +16,6 @@ def index():
 def admin():
     if request.method == 'POST':
         print(dict(request.form))
-        print(dict(request.form).items())
         # Process form data.
         # (This example uses a simple naming scheme for inputs.
         # For a real dynamic nested form you might want to use JavaScript
@@ -24,43 +23,43 @@ def admin():
         #
         # We assume input names are formatted as:
         #    event--<id>          for updating an existing event,
-        #    event--new           for a new event,
+        #    event--new-event-<#>  for a new event,
         #    role--<event_id>--<id> for updating an existing role,
-        #    role--<event_id>--new  for a new role,
+        #    role--<event_id>--new-role-<#>  for a new role,
         #    position--<event_id>--<role_id>--<id> for updating a position, or
-        #    position--<event_id>--<role_id>--new  for a new position.
+        #    position--<event_id>--<role_id>--new-position-<#>  for a new position.
         #
         # Here we simply loop over the keys.
-        for key, value in dict(request.form).items():
-            print(f"---Key: {key}, Value: {value}")
+        form_data = dict(request.form)
+        # Loop through each key/value pair in the POST data.
+        for key, value in form_data.items():
+            print(f"Key: {key}, Value: {value}")
             parts = key.split('--')
             if parts[0] == 'event':
-                if parts[1].startswith('new') and value.strip() != "":
-                    print(f"Adding event: {value.strip()}")
-                    fetch_data.add_event(value.strip()) 
+                # parts[1] is either an existing ID or a new event identifier.
+                if parts[1].startswith('new-event'):
+                    if value.strip() != "":
+                        fetch_data.add_event(value.strip())
                 else:
                     event_id = parts[1]
-                    print(f"Updating event {event_id} to {value.strip()}")
                     fetch_data.update_event(event_id, value.strip())
             elif parts[0] == 'role':
-                event_id = parts[1]
-                if parts[2].startswith('new') and value.strip() != "":
-                    print(f"Adding role to event {event_id}: {value.strip()}")
-                    fetch_data.add_role(event_id, value.strip())
+                # parts[1] = event_id, parts[2] = role id (or new role identifier)
+                if parts[2].startswith('new-role'):
+                    if value.strip() != "":
+                        event_id = parts[1]
+                        fetch_data.add_role(event_id, value.strip())
                 else:
                     role_id = parts[2]
-                    print(f"Updating role {role_id} to {value.strip()}")
                     fetch_data.update_role(role_id, value.strip())
             elif parts[0] == 'position':
-                event_id = parts[1]
-                role_id = parts[2]
-                # If the fourth part starts with "new", then treat it as a new position.
-                if parts[3].startswith('new') and value.strip() != "":
-                    print(f"Adding position to role {role_id} in event {event_id}: {value.strip()}")
-                    fetch_data.add_position(role_id, value.strip())
+                # parts[1] = event_id, parts[2] = role_id, parts[3] = position id (or new position identifier)
+                if parts[3].startswith('new-position'):
+                    if value.strip() != "":
+                        role_id = parts[2]
+                        fetch_data.add_position(role_id, value.strip())
                 else:
                     position_id = parts[3]
-                    print(f"Updating position {position_id} to {value.strip()}")
                     fetch_data.update_position(position_id, value.strip())
         return redirect(url_for('admin'))
     elif request.method == "GET":
