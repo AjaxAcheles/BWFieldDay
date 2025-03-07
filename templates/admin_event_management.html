@@ -1,25 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Admin Event Manager</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    /* Optional custom styling */
-    .event-container, .role-container, .position-container {
-      position: relative;
-    }
-    .event-close-button,
-    .role-close-button,
-    .position-close-button {
-      float: right;
-    }
-  </style>
-</head>
-<body> 
+{% extends "admin_layout.html" %} {% set page_title="Manage Events" %}
+
+{% block content %}
   <div class="container mt-4">
     <h1 class="text-center my-5">Admin Event Manager</h1>
-    <form method="POST" action="{{ url_for('event_manager') }}">
+    <form method="POST" action="{{ url_for('volunteers.event_manager') }}">
       <ul class="list-group text-start" id="event-list">
         {# Loop over existing events passed from the backend #}
         {{ events }}
@@ -43,7 +27,7 @@
                   <label>position {{ loop.index }}: </label>
                   <select name="position--{{ event.event_id }}--{{ role.role_id }}--{{ position.position_id }}">
                     <option value="">Select Position</option>
-                    {% for option in predefined_position_options %}
+                    {% for option in position_options %}
                       <option value="{{ option }}" {% if option == position.position_holder_name %}selected{% endif %}>{{ option }}</option>
                     {% endfor %}
                   </select>
@@ -76,18 +60,21 @@
       <button type="submit" class="btn btn-primary mt-3">commit changes</button>
     </form>
   </div>
+  <p class="invisible" id="positionOptions">{% for option in position_options %}{{option}}{% if not loop.last %},{% endif %}{% endfor %}</p>
   <script>
-    // Predefined options for positions.
-    const positionOptions = [
-      { value: '', text: 'Select Position' },
-      { value: 'Volunteer A', text: 'Volunteer A' },
-      { value: 'Volunteer B', text: 'Volunteer B' },
-      { value: 'Volunteer C', text: 'Volunteer C' }
+    // Options for positions.
+    var positionOptions = [
+      { value: '', text: 'Select Position' }
     ];
+    gotPositionOptions = $("#positionOptions").text().split(',');
+    gotPositionOptions.forEach(function(option) {
+      positionOptions.push({ value: option, text: option });
+    });
+    console.log(positionOptions);
     
     // Remove an element by hiding it.
     function removeElement(btn) {
-      btn.parentElement.style.display = 'none';
+      btn.parentElement.remove();
     }
     
     // Global counters to generate unique IDs for new items.
@@ -162,6 +149,4 @@
       positionList.insertBefore(li, addPosContainer);
     }
   </script>
-</body>
-
-</html>
+{% endblock %}

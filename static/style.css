@@ -1,0 +1,9 @@
+/* Optional custom styling */
+.event-container, .role-container, .position-container {
+    position: relative;
+  }
+  .event-close-button,
+  .role-close-button,
+  .position-close-button {
+    float: right;
+  }
