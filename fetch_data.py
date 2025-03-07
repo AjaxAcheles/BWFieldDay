@@ -399,6 +399,16 @@ def get_all_tables():
     return database_dict
 
 
+def get_all_volunteering_parent_names():
+    connection = get_db()
+    sql = connection.cursor()
+    parent_1_names = sql.execute("SELECT parent_1_name FROM parent_info WHERE is_parent_1_volunteering = 1").fetchall()
+    parent_2_names = sql.execute("SELECT parent_2_name FROM parent_info WHERE is_parent_2_volunteering = 1").fetchall()
+    parent_1_names = [name[0] for name in parent_1_names]
+    parent_2_names = [name[0] for name in parent_2_names]
+    all_volunteering_parent_names = parent_1_names + parent_2_names
+    return all_volunteering_parent_names
+
 
 def reset_all_databases(current_admin_info):
     connection = get_db()
