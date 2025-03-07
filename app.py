@@ -4,9 +4,10 @@ import fetch_data
 app = Flask(__name__)
 
 # At startup, make sure our database tables exist.
-fetch_data.create_events_table()
-fetch_data.create_roles_table()
-fetch_data.create_positions_table()
+with app.app_context():
+    fetch_data.create_events_table()
+    fetch_data.create_roles_table()
+    fetch_data.create_positions_table()
 
 @app.route('/')
 def index():
