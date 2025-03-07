@@ -33,7 +33,7 @@
     <form class="text-center" action="{{url_for('auth.register')}}" method="POST">
         <!-- parent 1 ask + info -->
         <div>
-            <label for="parent-1-name">Parent Name:</label>
+            <label for="parent-1-name">Parent Full Name:</label>
             <input type="text" id="parent-1-name" name="parent-1-name" >
         </div>
         <div>
@@ -171,10 +171,10 @@
                             <label for="child-${index}-t-shirt-option">Does this child want a t-shirt?</label>
                             <select class="child-t-shirt-option" data-childNumber="${index}" name="child-${index}-t-shirt-option" id="child-${index}-t-shirt-option">
                                 <option value="true">Yes</option>
-                                <option value="false">No</option>
+                                <option value="false" selected>No</option>
                             </select>
                         </div>
-                        <div id="child-${index}-t-shirt-size-container">
+                        <div id="child-${index}-t-shirt-size-container" style="display: none;">
                             <label for="child-${index}-t-shirt-size">T-Shirt Size</label>
                             <select name="child-${index}-t-shirt-size" id="child-${index}-t-shirt-size">
                                 <option value="null" disabled selected>--Select an option--</option>
