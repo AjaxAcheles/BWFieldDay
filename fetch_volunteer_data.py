@@ -1,7 +1,7 @@
 import sqlite3
 import json
 
-DATABASE = "database.db"
+DATABASE = "volunteers.db"
 
 def get_db():
     connection = sqlite3.connect(DATABASE)

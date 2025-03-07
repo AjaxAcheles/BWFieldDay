@@ -19,7 +19,7 @@
 <body> 
   <div class="container mt-4">
     <h1 class="text-center my-5">Admin Event Manager</h1>
-    <form method="POST" action="{{ url_for('admin') }}">
+    <form method="POST" action="{{ url_for('event_manager') }}">
       <ul class="list-group text-start" id="event-list">
         {# Loop over existing events passed from the backend #}
         {{ events }}
