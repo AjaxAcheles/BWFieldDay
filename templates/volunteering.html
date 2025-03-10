@@ -1,33 +1,41 @@
-{% extends "layout.html" %} {% set page_title="Volunteering" %}
+{% extends "layout.html" %}
+{% set page_title="Volunteering" %}
 
 {% block content %}
 <div class="container mt-4">
-  <h1>Volunteer for a Position</h1>
-  <form class="text-center" method="POST">
+  <h1 class="mb-4">Volunteer Management</h1>
+  
+  {% if message %}
+  <div class="alert alert-info" role="alert">
+    {{ message }}
+  </div>
+  {% endif %}
+  
+  <form method="POST">
     {% for event in events %}
-    <ul class="list-group mb-3">
-      <li class="list-group-item text-capitalize">{{ event.event_name }}</li>
-      {% for role in event.roles %}
-      <li class="list-group-item">
-        <ul class="list-group">
-          {% for position in role.positions %}
-          <li class="list-group-item">
-            <label for="volunteer--{{ position.position_id }}" class="text-capitalize">
-              {{ position.position_name }}:
-            </label>
-            <select name="volunteer--{{ position.position_id }}" id="volunteer--{{ position.position_id }}" class="form-select">
-              <option value="">I will not volunteer for this position</option>
-              <!-- In a real app you might list available volunteer names here -->
-              <option value="account name">account name</option>
-            </select>
-          </li>
-          {% endfor %}
-        </ul>
-      </li>
-      {% endfor %}
-    </ul>
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">{{ event.event_name }}</h2>
+      </div>
+      <div class="card-body">
+        {% for role in event.roles %}
+        <div class="mb-4">
+          <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <p class="text-capitalize">{{ role.role_name }}</p>
+
+              {% if is_volunteered_for_role[role.role_id] %}
+                <button type="submit" name="toggle_volunteer--{{ role.role_id }}" class="btn btn-sm btn-success">I volunteered for this position</button>
+                {% else %}
+                <button type="submit" name="toggle_volunteer--{{ role.role_id }}" class="btn btn-sm btn-secondary">I did not volunteer for this position</button>
+                {% endif %}
+            </li>
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
     {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
 {% endblock %}

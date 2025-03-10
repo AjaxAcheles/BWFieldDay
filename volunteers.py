@@ -175,19 +175,6 @@ def event_manager():
                               events=get_all_events_nested(), 
                               position_options=position_options)
 
-@volunteers_bp.route('/volunteering', methods=['GET', 'POST'])
-def volunteering():
-    if request.method == 'POST':
-        # Process volunteer selections.
-        # We expect form keys like "volunteer--<position_id>"
-        for key, value in request.form.items():
-            if key.startswith('volunteer--'):
-                position_id = key.split('--')[1]
-                # Here we update the position with the volunteer’s account name.
-                # (In a full application you would validate that the user is allowed to volunteer, etc.)
-                update_position_volunteer(position_id, value.strip())
-        return redirect(url_for('volunteers.volunteering'))
-    # GET: load the current events (with nested roles and positions)
-    events = get_all_events_nested()
-    return render_template('volunteering.html', events=events)
-
+@volunteers_bp.route('/volunteer-management', methods=['GET', 'POST'])
+def volunteer_management():
+    return None
