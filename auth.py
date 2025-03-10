@@ -83,7 +83,7 @@ def register():
         set_logged_in(ids_dict["parent_id"], ids_dict["children_info_dict"])
 
         if is_parent_1_volunteering is True or is_parent_2_volunteering is True:
-            return redirect(url_for("account.volunteering"))
+            return redirect(url_for("volunteers.volunteer_management"))
         else:
             return redirect(url_for("home"))
 

@@ -161,3 +161,13 @@ h1, p {
     padding-left: 3rem !important;
   }
 }
+
+.event-container, .role-container, .position-container {
+    position: relative;
+  }
+
+  .event-close-button,
+  .role-close-button,
+  .position-close-button {
+    float: right;
+  }

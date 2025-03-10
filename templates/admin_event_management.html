@@ -1,253 +1,152 @@
-{% extends "admin_layout.html" %} {% set page_title="Dashboard" %}
-
-{% from "macros.html" import show_events_to_admin %}
+{% extends "admin_layout.html" %} {% set page_title="Manage Events" %}
 
 {% block content %}
-    <h1 class="text-center my-5">Manage Events</h1>
-    <form action="{{url_for('admin.manage_events')}}" method="POST">
-        <ul class="list-group text-start">
-        {% for event_name in events %}
-            {% set event_positions_dict = events[event_name] %}
-            {% set event_id = event_name.replace(" ", "-").lower() %}
-            <li class="list-group-item text-capitalize bg-light event-container" id="event-{{event_id}}">
-                <!-- this is the close button -->
-                <button type="button" class="btn p-0 event-close-button" id="event-{{event_id}}-close-button" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16">
-                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"></path>
-                    </svg>
-                </button>
-                <!-- this is where the event name is -->
-                <input class="bg-light" name="event--{{event_id}}" id="event-{{event_id}}-input" type="text" value="{{event_name}}">
-
-                <ul class="list-group">
-                    {% for role_name in event_positions_dict %}
-                        {% set amount_of_positions = event_positions_dict[role_name] %}
-                        {% set role_id = role_name.replace(' ', '-').lower() %}
-                        <li class="list-group-item bg-secondary role-container" id="role-{{event_id}}-{{role_id}}">
-                            <!-- this is where the role name is -->
-                            <button type="button" class="btn p-0 role-close-button" id="role-{{role_id}}-close-button" aria-label="Close">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16">
-                                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"></path>
-                                </svg>
-                            </button>  
-                            <input class="bg-secondary" name="role--{{event_id}}--{{role_id}}" value="{{role_name}}"> 
-                            <input type="hidden" id="number-of-position-in-{{role_id}}" name="positions--{{event_id}}--{{role_id}}" value="{{amount_of_positions}}">
-                            <ul class="list-group">
-                                {% for index in range(amount_of_positions) %}
-                                <!-- this is where each position is displayed -->
-                                    {% set position_index = index + 1 %}
-                                    {% set position_id = event_name.replace(" ", "-").lower() + "-" + role_name.replace(" ", "-").lower() + "-" + position_index|string %}
-                                    {% set position_name_class = role_name.replace(" ", "-").lower() %}
-                                    <li class="list-group-item bg-dark text-white position-container" id="position-{{position_id}}">
-                                        <!-- this is the close button -->
-                                        <button type="button" class="btn p-0 position-close-button bg-secondary" id="position-{{position_id}}-close-button" data-linkedInputId="number-of-position-in-{{role_id}}" aria-label="Close">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-dash-square" viewBox="0 0 16 16">
-                                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"></path>
-                                            </svg>
-                                        </button>
-                                        <span>position {{position_index}}: {{occupied_positions[position_id]}}</span>
-                                    </li>
-                                {% endfor %}
-                                <li class="list-group-item bg-dark text-white">
-                                    <!-- this is an add button -->
-                                    <button type="button" class="btn p-0 add-position-button text-white" data-linkedInputId="number-of-position-in-{{role_id}}" aria-label="Open">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill bg-primary" viewBox="0 0 16 16">
-                                            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
-                                        </svg>
-                                        add new position
-                                    </button>
-                                </li>
-                                
-                            </ul>
-                        </li> 
+  <div class="container mt-4">
+    <h1 class="text-center my-5">Admin Event Manager</h1>
+    <form method="POST" action="{{ url_for('volunteers.event_manager') }}">
+      <ul class="list-group text-start" id="event-list">
+        {# Loop over existing events passed from the backend #}
+        {{ events }}
+        {% for event in events %}
+        <li class="list-group-item text-capitalize bg-light event-container" id="event-{{ event.event_id }}">
+          <!-- Close button to remove event -->
+          <button type="button" class="btn p-0 event-close-button" aria-label="Close" onclick="removeElement(this)">&times;</button>
+          <!-- Event name input -->
+          <input class="bg-light" name="event--{{ event.event_id }}" type="text" value="{{ event.event_name }}" spellcheck="false">
+          <ul class="list-group mt-2">
+            {# Loop over roles for this event #}
+            {% for role in event.roles %}
+            <li class="list-group-item bg-secondary role-container" id="role-{{ event.event_id }}-{{ role.role_id }}">
+              <button type="button" class="btn p-0 role-close-button" aria-label="Close" onclick="removeElement(this)">&times;</button>
+              <input class="bg-secondary" name="role--{{ event.event_id }}--{{ role.role_id }}" type="text" value="{{ role.role_name }}" spellcheck="false">
+              <ul class="list-group mt-2">
+                {# Loop over positions for this role #}
+                {% for position in role.positions %}
+                <li class="list-group-item bg-dark text-white position-container" id="position-{{ position.position_id }}">
+                  <button type="button" class="btn p-0 position-close-button bg-secondary" aria-label="Close" onclick="removeElement(this)">&times;</button>
+                  <label>position {{ loop.index }}: </label>
+                  <select name="position--{{ event.event_id }}--{{ role.role_id }}--{{ position.position_id }}">
+                    <option value="">Select Position</option>
+                    {% for option in position_options %}
+                      <option value="{{ option }}" {% if option == position.position_holder_name %}selected{% endif %}>{{ option }}</option>
                     {% endfor %}
-                    <li class="list-group-item bg-secondary">
-                        <!-- this is an add button -->
-                        <button type="button" class="btn p-0 add-role-button" aria-label="Open">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-plus-square-fill bg-primary" viewBox="0 0 16 16">
-                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
-                            </svg>
-                            add new roles
-                        </button>
-                    </li>
-                </ul>
+                  </select>
+                </li>
+                {% endfor %}
+                <li class="list-group-item bg-dark text-white">
+                  <!-- Add button for new position -->
+                  <button type="button" class="btn p-0 add-position-button text-white" onclick="addPosition(this, '{{ event.event_id }}', '{{ role.role_id }}')">add new position</button>
+                  {# New position dropdowns will be added here by JavaScript #}
+                </li>
+              </ul>
             </li>
+            {% endfor %}
+            <li class="list-group-item bg-secondary">
+              <!-- Add button for new role -->
+              <button type="button" class="btn p-0 add-role-button" onclick="addRole(this, '{{ event.event_id }}')">add new role</button>
+              <!-- Hidden placeholder for new roles -->
+              <input type="hidden" name="role--{{ event.event_id }}--new" value="">
+            </li>
+          </ul>
+        </li>
         {% endfor %}
-            <li class="list-group-item bg-light">
-                <!-- this is an add button -->
-                <button type="button" class="btn p-0 add-event-button" aria-label="Open">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-plus-square-fill bg-primary" viewBox="0 0 16 16">
-                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
-                    </svg>
-                    add new event
-                </button>
-            </li>
-        </ul>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <li class="list-group-item bg-light" id="add-event-container">
+          <!-- Add button for new event -->
+          <button type="button" class="btn p-0 add-event-button" onclick="addEvent(this)">add new event</button>
+          <!-- Hidden placeholder for new events -->
+          <input type="hidden" name="event--new" value="">
+        </li>
+      </ul>
+      <button type="submit" class="btn btn-primary mt-3">commit changes</button>
     </form>
+  </div>
+  <p class="invisible" id="positionOptions">{% for option in position_options %}{{option}}{% if not loop.last %},{% endif %}{% endfor %}</p>
+  <script>
+    // Options for positions.
+    var positionOptions = [
+      { value: '', text: 'Select Position' }
+    ];
+    gotPositionOptions = $("#positionOptions").text().split(',');
+    gotPositionOptions.forEach(function(option) {
+      positionOptions.push({ value: option, text: option });
+    });
+    console.log(positionOptions);
     
-    <script>
-        function removeEvent(clicked) {
-            var eventElement = $(clicked.currentTarget).closest('li');
-            eventElement.remove();
-        };
-
-        function removeRole(clicked) {
-            var roleElement = $(clicked.currentTarget).closest('li');
-            roleElement.remove();
-        };
-
-        function removePosition(clicked) {
-            var positionElement = $(clicked.currentTarget).closest('li');
-            var linkedInputId = `#${clicked.currentTarget.dataset.linkedinputid}`;
-            var positionInput = $(linkedInputId);
-            var oldPositions = Number(positionInput.val());
-            var newPositions = oldPositions - 1;
-            positionElement.remove();
-            positionInput.val(newPositions);
-        };
-
-        $(".event-close-button").click(removeEvent);
-        $(".role-close-button").click(removeRole);
-        $(".position-close-button").click(removePosition);
-
-
-        function addEvent(clicked) {
-            newEvents++;
-            var innerHTML = `
-            <li class="list-group-item text-capitalize bg-light event-container" id="event-new-event-${newEvents}">
-                    <button type="button" class="btn p-0 event-close-button" id="event-new-event-${newEvents}-close-button" aria-label="Close">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16">
-                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"></path>
-                        </svg>
-                    </button>
-                    <input class="bg-light" name="event--new-event-${newEvents}" id="event-new-event-${newEvents}-input" type="text" value="" required>
-
-                    <ul class="list-group">
-                        <li class="list-group-item bg-secondary">
-                            <button type="button" class="btn p-0 add-role-button" aria-label="Open">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-plus-square-fill bg-primary" viewBox="0 0 16 16">
-                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
-                                </svg>
-                                add new roles
-                            </button>
-                        </li>
-                    </ul>
-                </li>
-                `;
-            var ulRef = $(clicked.currentTarget).closest('ul');
-            var ulSecondToLastRef = ulRef.children().eq(-1);
-            var addedEvent = $(innerHTML).insertBefore(ulSecondToLastRef);
-
-            // attatch event listeners
-            addEventToClassIfNotExists($('.event-close-button'), "click", removeEvent);
-            addEventToClassIfNotExists($('.add-role-button'), "click", addRole);
-
-            // trigger add role
-            $(addedEvent).find(".add-role-button").trigger("click");
-        };
-
-        function addRole(clicked) {
-            newRoles++;
-            eventId = $(clicked.currentTarget).closest('ul').closest('li').attr('id').substring(6);
-            innerHTML = `
-            <li class="list-group-item bg-secondary role-container" id="role-${eventId}-new-role-${newRoles}">
-                <button type="button" class="btn p-0 role-close-button" id="role-new-role-${newRoles}-close-button" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16">
-                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"></path>
-                    </svg>
-                </button>  
-                <input class="bg-secondary" name="role--${eventId}--new-role-${newRoles}" value="" required> 
-                <input type="hidden" id="number-of-position-in-new-role-${newRoles}" name="positions--${eventId}--new-role-${newRoles}" value="0">
-                <ul class="list-group">
-                    <li class="list-group-item bg-dark text-white">
-                        <button type="button" class="btn p-0 add-position-button text-white" data-linkedInputId="number-of-position-in-new-role-${newRoles}" aria-label="Open">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill bg-primary" viewBox="0 0 16 16">
-                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
-                            </svg>
-                            add new position
-                        </button>
-                    </li>
-                </ul>
-            </li> 
-            `;
-            var ulRef = $(clicked.currentTarget).closest('ul');
-            var ulSecondToLastRef = ulRef.children().eq(-1);
-            var addedEvent = $(innerHTML).insertBefore(ulSecondToLastRef);
-
-            // attatch event listeners
-            addEventToClassIfNotExists($('.role-close-button'), "click", removeRole);
-            addEventToClassIfNotExists($('.add-position-button'), "click", addPosition);
-
-            // trigger add position
-            $(addedEvent).find(".add-position-button").trigger("click");
-        }
-
-        function addPosition(clicked) {
-            var linkedInput = `${clicked.currentTarget.dataset.linkedinputid}`;
-            var eventId = $(clicked.currentTarget).closest('ul').closest('li').closest('ul').closest('li').attr('id').substring(6);
-            var roleId = $(clicked.currentTarget).closest('ul').closest('li').attr('id').substring(5);
-            var positionIdNoIndex = `${eventId}-${roleId}`
-            var positionIndex = $(clicked.currentTarget).closest('ul').children().length;
-            var positionId = `${positionIdNoIndex}-${positionIndex}`;
-
-            innerHTML = `
-                <li class="list-group-item bg-dark text-white position-container" id="position-${positionId}">
-                    <button type="button" class="btn p-0 position-close-button bg-secondary" id="position-${positionId}-close-button" data-linkedInputId="${linkedInput}" aria-label="Close">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-dash-square" viewBox="0 0 16 16">
-                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"></path>
-                        </svg>
-                    </button>
-                    <span>position ${positionIndex}:</span>
-                </li>
-            `;
-
-            // add innerHTML to ul
-            var ulRef = $(clicked.currentTarget).closest('ul');
-            var ulSecondToLastRef = ulRef.children().eq(-1);
-            var addedEvent = $(innerHTML).insertBefore(ulSecondToLastRef);
-
-            // add 1 to hidden input
-            var positionInput = $(`#${linkedInput}`);
-            // Use parseInt to handle potential non-numeric values
-            var oldPositions = parseInt(positionInput.val(), 10); 
-            
-            // Check if oldPositions is a valid number
-            if (isNaN(oldPositions)) { 
-                oldPositions = 0;
-            } 
-            var newPositions = oldPositions + 1;
-            positionInput.val(newPositions);
-            var newPositions = oldPositions + 1;
-            positionInput.val(newPositions);
-
-            // attatch event listeners
-            addEventToClassIfNotExists($('.position-close-button'), "click", removePosition);
-        }
-
-        var newEvents = 0;
-        var newRoles = 0;
-        $(".add-event-button").click(addEvent);
-        $(".add-role-button").click(addRole);
-        $(".add-position-button").click(addPosition);
-
-        function addEventToClassIfNotExists(elementsWithClass, eventListenerName, eventHandler) {
-            elementsWithClass.each(function() {
-                eventListeners = []
-                $.each($._data($(this)[0], "events"), function(eventName, event) {
-                    eventListeners.push(eventName);
-                });
-                if (!eventListeners.includes("click")) {
-                    $(this).on(eventListenerName, eventHandler);
-                }
-            });
-        }
-        
-    </script>
+    // Remove an element by hiding it.
+    function removeElement(btn) {
+      btn.parentElement.remove();
+    }
+    
+    // Global counters to generate unique IDs for new items.
+    let newEventCounter = 0;
+    let newRoleCounter = 0;
+    let newPositionCounter = 0;
+    
+    // Function to add a new event.
+    function addEvent(btn) {
+      newEventCounter++;
+      const eventId = 'new-event-' + newEventCounter;
+      const li = document.createElement('li');
+      li.className = 'list-group-item text-capitalize bg-light event-container';
+      li.id = 'event-' + eventId;
+      li.innerHTML = `
+        <button type="button" class="btn p-0 event-close-button" aria-label="Close" onclick="removeElement(this)">&times;</button>
+        <input class="bg-light" name="event--${eventId}" type="text" value="" spellcheck="false">
+        <ul class="list-group mt-2">
+          <li class="list-group-item bg-secondary">
+            <button type="button" class="btn p-0 add-role-button" onclick="addRole(this, '${eventId}')">add new role</button>
+            <input type="hidden" name="role--${eventId}--new" value="">
+          </li>
+        </ul>
+      `;
+      const eventList = document.getElementById('event-list');
+      const addEventContainer = document.getElementById('add-event-container');
+      eventList.insertBefore(li, addEventContainer);
+    }
+    
+    // Function to add a new role to an event.
+    function addRole(btn, eventId) {
+      newRoleCounter++;
+      const roleId = 'new-role-' + newRoleCounter;
+      const roleList = btn.parentElement.parentElement;
+      const li = document.createElement('li');
+      li.className = 'list-group-item bg-secondary role-container';
+      li.id = `role-${eventId}-${roleId}`;
+      li.innerHTML = `
+        <button type="button" class="btn p-0 role-close-button" aria-label="Close" onclick="removeElement(this)">&times;</button>
+        <input class="bg-secondary" name="role--${eventId}--${roleId}" type="text" value="" spellcheck="false">
+        <ul class="list-group mt-2">
+          <li class="list-group-item bg-dark text-white">
+            <button type="button" class="btn p-0 add-position-button text-white" onclick="addPosition(this, '${eventId}', '${roleId}')">add new position</button>
+          </li>
+        </ul>
+      `;
+      roleList.insertBefore(li, btn.parentElement);
+    }
+    
+    // Function to add a new position to a role.
+    function addPosition(btn, eventId, roleId) {
+      newPositionCounter++;
+      const positionId = 'new-position-' + newPositionCounter;
+      const positionList = btn.parentElement.parentElement;
+      const li = document.createElement('li');
+      li.className = 'list-group-item bg-dark text-white position-container';
+      li.id = `position-${positionId}`;
+      // Determine the display number based on how many position items exist (excluding the add button item).
+      const currentPositions = positionList.querySelectorAll('li.position-container').length + 1;
+      let optionsHTML = '';
+      positionOptions.forEach(function(option) {
+        optionsHTML += `<option value="${option.value}">${option.text}</option>`;
+      });
+      li.innerHTML = `
+        <button type="button" class="btn p-0 position-close-button bg-secondary" aria-label="Close" onclick="removeElement(this)">&times;</button>
+        <label>position ${currentPositions}: </label>
+        <select name="position--${eventId}--${roleId}--${positionId}">
+          ${optionsHTML}
+        </select>
+      `;
+      const addPosContainer = btn.parentElement;
+      positionList.insertBefore(li, addPosContainer);
+    }
+  </script>
 {% endblock %}
