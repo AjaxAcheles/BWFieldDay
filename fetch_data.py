@@ -25,6 +25,21 @@ def create_parent_info_table():
     connection.commit()
 
 
+def create_child_info_table():
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("""
+                CREATE TABLE IF NOT EXISTS
+                child_info (
+                    child_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    child_name TEXT, 
+                    child_age INTEGER, 
+                    child_t_shirt_size TEXT,
+                    parent_id INTEGER
+                )""")
+    connection.commit()
+
+
 def create_admin_info_table(current_admin_info=None):
     connection = get_db()
     sql = connection.cursor()
@@ -44,8 +59,6 @@ def create_admin_info_table(current_admin_info=None):
         else:
             insert_into_event_table("admin", {"email": current_admin_info[0], "password": current_admin_info[1]})
 
-   
-
 
 def create_volunteers_info_table():
     connection = get_db()
@@ -57,21 +70,6 @@ def create_volunteers_info_table():
                     volunteer_parent_id INTEGER
                 )
                 """)
-    connection.commit()
-
-
-def create_child_info_table():
-    connection = get_db()
-    sql = connection.cursor()
-    sql.execute("""
-                CREATE TABLE IF NOT EXISTS
-                child_info (
-                    child_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    child_name TEXT, 
-                    child_age INTEGER, 
-                    child_t_shirt_size TEXT,
-                    parent_id INTEGER
-                )""")
     connection.commit()
 
 

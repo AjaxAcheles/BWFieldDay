@@ -179,4 +179,10 @@ def event_manager():
 @volunteers_bp.route('/volunteer_management', methods=['GET', 'POST'])
 @login_required
 def volunteer_management():
-    return "None"
+    if request.method == "GET":
+        print(get_all_events_nested())
+        return render_template_with_session('volunteering.html', events=get_all_events_nested())
+    elif request.method == "POST":
+        print(request.form)
+        #request.form.get("")
+
