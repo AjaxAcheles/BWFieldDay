@@ -94,10 +94,10 @@ def event_manager():
                 if len(parts) < 4:
                     continue
                 
-                # Skip empty fields
-                value = value.strip()
-                if not value:
-                    continue
+                ## Skip empty fields
+                #value = value.strip()
+                #if not value:
+                #    continue
                 
                 # Get the event ID, checking if it's a newly created event
                 event_id = parts[1]
@@ -176,13 +176,38 @@ def event_manager():
                               events=get_all_events_nested(), 
                               position_options=position_options)
 
+
 @volunteers_bp.route('/volunteer_management', methods=['GET', 'POST'])
 @login_required
 def volunteer_management():
+    if request.method == 'POST':
+        # Get JSON data from AJAX request
+        data = request.json
+        print(data)        
+        
+        role_id = data.get('role_id')
+        parent_id = data.get('parent_id')
+        position_holder_name = data.get('position_holder_name')
+        signing_up = data.get('signing_up')
+        
+        try:
+            if signing_up:
+                toggle_position_with_volunteer_data(role_id, position_holder_name, parent_id)
+                return jsonify({'success': True})
+            else:
+                delete_position(role_id, position_holder_name, parent_id)
+                return jsonify({'success': True})
+        except Exception as e:
+            print(f"Error in volunteer signup: {str(e)}")
+            return jsonify({'success': False, 'message': f'An error occurred: {str(e)}'})
+    
+    # GET request
+    # Get all events with nested roles and positions
     if request.method == "GET":
-        print(get_all_events_nested())
-        return render_template_with_session('volunteering.html', events=get_all_events_nested())
-    elif request.method == "POST":
-        print(request.form)
-        #request.form.get("")
+        events = get_all_events_nested()
+
+        parent_info = get_parent_info_with_parent_id(session.get("parent_id"))
+
+        # Render the template
+        return render_template_with_session('volunteering.html', events=events, parent_info=parent_info)
 

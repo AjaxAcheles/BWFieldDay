@@ -46,6 +46,7 @@ def create_positions_table():
             position_id INTEGER PRIMARY KEY AUTOINCREMENT, 
             position_holder_name TEXT,
             role_id INTEGER,
+            parent_id INTEGER,
             FOREIGN KEY(role_id) REFERENCES roles(role_id)
         )
     """)
@@ -224,6 +225,27 @@ def update_position(position_id, position_holder_name):
     connection.commit()
     connection.close()
 
+def toggle_position_with_volunteer_data(role_id, position_holder_name, parent_id):
+    connection = get_db()
+    cursor = connection.cursor()
+    # check to see if user has a position already
+    filled_position = cursor.execute("SELECT position_id FROM positions WHERE role_id = ? AND position_holder_name = ? AND parent_id = ?", (role_id, position_holder_name, parent_id)).fetchone()
+    if filled_position:
+        # if exists, empty the position
+        position_id = filled_position['position_id']
+        cursor.execute("UPDATE positions SET position_holder_name = NULL, parent_id = NULL WHERE position_id = ?", (position_id,))
+    else:  
+        # if position doesn't exist  
+        empty_position = cursor.execute("SELECT position_id FROM positions WHERE role_id = ? AND parent_id IS NULL", (role_id,)).fetchone()
+        if empty_position:
+            position_id = empty_position['position_id']
+            cursor.execute("UPDATE positions SET position_holder_name = ?, parent_id = ? WHERE position_id = ?", (position_holder_name, parent_id, position_id))
+        else:
+            print(empty_position)
+    connection.commit()
+    connection.close()
+    
+
 def delete_position(position_id):
     connection = get_db()
     cursor = connection.cursor()
@@ -241,6 +263,14 @@ def delete_position(position_id):
     connection.commit()
     connection.close()
 
+def delete_position_with_volunteer_data(role_id, position_holder_name, parent_id):
+    connection = get_db()
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM positions WHERE role_id = ? AND position_holder_name = ? AND parent_id = ?", (role_id, position_holder_name, parent_id))
+    connection.commit()
+    connection.close()
+    
+
 def update_position_volunteer(position_id, volunteer_name):
     connection = get_db()
     cursor = connection.cursor()
@@ -255,6 +285,14 @@ def get_position(position_id):
     position = cursor.fetchone()
     connection.close()
     return position
+
+def get_positions_by_parent_id(parent_id):
+    connection = get_db()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM positions WHERE parent_id = ?", (parent_id,))
+    positions = cursor.fetchall()
+    connection.close()
+    return positions
 
 def get_max_position_id():
     connection = get_db()
