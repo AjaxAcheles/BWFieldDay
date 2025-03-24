@@ -11,7 +11,8 @@ from flask import (
 from decorators import *
 from fetch_data import *
 from functions import *
-from fetch_volunteer_data import reset_all_volunteer_databases
+import fetch_volunteer_data
+
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -133,6 +134,7 @@ def manage_database():
     if request.method == "GET":
         # Get all tables from database.db and store them in a Json-style python dict.
         tables = get_all_tables()
+        tables = tables | fetch_volunteer_data.get_all_tables()
         return render_template_with_session("admin_database_management.html", tables=tables)
     elif request.method == "POST":
         # save the destroyer's family
@@ -141,7 +143,7 @@ def manage_database():
         # reset the database
         current_admin_info = [session["email"], get_admin_password_with_email(session["email"])]
         reset_all_databases(current_admin_info)
-        reset_all_volunteer_databases()
+        fetch_volunteer_data.reset_all_volunteer_databases()
         
         # ressurect the destroyer's family
         parents = family["parents"]

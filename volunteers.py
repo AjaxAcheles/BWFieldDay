@@ -94,10 +94,10 @@ def event_manager():
                 if len(parts) < 4:
                     continue
                 
-                ## Skip empty fields
-                #value = value.strip()
-                #if not value:
-                #    continue
+                # Skip empty fields
+                value = value.strip()
+                if not value:
+                    value = None
                 
                 # Get the event ID, checking if it's a newly created event
                 event_id = parts[1]
@@ -119,12 +119,12 @@ def event_manager():
                 
                 if parts[3].startswith('new-position'):
                     # Add new position
-                    new_position_id = add_position(role_id, value)
+                    new_position_id = add_position(role_id, value, None)
                     present_positions.add(new_position_id)
                 else:
                     # Update existing position
                     position_id = int(parts[3])
-                    update_position(position_id, value)
+                    update_position(position_id, value, None)
                     present_positions.add(position_id)
             
             # STAGE 4: Delete items that are no longer present in the form

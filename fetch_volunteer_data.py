@@ -199,12 +199,12 @@ def get_max_role_id():
 
 # ––– Position Functions ––– 
 
-def add_position(role_id, position_holder_name):
+def add_position(role_id, position_holder_name, parent_id):
     connection = get_db()
     cursor = connection.cursor()
     # New position: no volunteer has claimed it yet.
-    cursor.execute("INSERT INTO positions (position_holder_name, role_id) VALUES (?, ?)",
-                   (position_holder_name, role_id))
+    cursor.execute("INSERT INTO positions (position_holder_name, role_id, parent_id) VALUES (?, ?, ?)",
+                   (position_holder_name, role_id, parent_id))
     connection.commit()
     position_id = cursor.lastrowid
     connection.close()
@@ -218,10 +218,10 @@ def add_position(role_id, position_holder_name):
         pass
     return position_id
 
-def update_position(position_id, position_holder_name):
+def update_position(position_id, position_holder_name, parent_id):
     connection = get_db()
     cursor = connection.cursor()
-    cursor.execute("UPDATE positions SET position_holder_name = ? WHERE position_id = ?", (position_holder_name, position_id))
+    cursor.execute("UPDATE positions SET position_holder_name = ?, parent_id = ? WHERE position_id = ?", (position_holder_name, parent_id, position_id))
     connection.commit()
     connection.close()
 
@@ -351,3 +351,14 @@ def reset_all_volunteer_databases():
     create_roles_table()
     create_positions_table()
     
+def get_all_tables():
+    connection = get_db()
+    sql = connection.cursor()
+    database_dict = {}
+    tables = sql.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall() 
+    tables = [table[0] for table in tables]
+    for table in tables:
+        rows = sql.execute("SELECT * FROM " + table).fetchall()
+        database_dict[table] = rows
+    print(database_dict)
+    return database_dict

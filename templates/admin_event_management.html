@@ -26,10 +26,13 @@
                   <button type="button" class="btn p-0 position-close-button bg-secondary" aria-label="Close" onclick="removeElement(this)">&times;</button>
                   <label>position {{ loop.index }}: </label>
                   <select name="position--{{ event.event_id }}--{{ role.role_id }}--{{ position.position_id }}">
-                    <option value="">Select Position</option>
+                    <option value="{{ position.position_holder_name if position.position_holder_name is not none else '' }}" selected>
+                      {{ position.position_holder_name }}
+                    </option>
+                    <!--<option value="">No Volunteer</option>
                     {% for option in position_options %}
                       <option value="{{ option }}" {% if option == position.position_holder_name %}selected{% endif %}>{{ option }}</option>
-                    {% endfor %}
+                    {% endfor %}-->
                   </select>
                 </li>
                 {% endfor %}
@@ -64,7 +67,7 @@
   <script>
     // Options for positions.
     var positionOptions = [
-      { value: '', text: 'Select Position' }
+      { value: '', text: 'No Volunteer' }
     ];
     gotPositionOptions = $("#positionOptions").text().split(',');
     gotPositionOptions.forEach(function(option) {
