@@ -141,11 +141,20 @@
       positionOptions.forEach(function(option) {
         optionsHTML += `<option value="${option.value}">${option.text}</option>`;
       });
+      //li.innerHTML = `
+      //  <button type="button" class="btn p-0 position-close-button bg-secondary" aria-label="Close" onclick="removeElement(this)">&times;</button>
+      //  <label>position ${currentPositions}: </label>
+      //  <select name="position--${eventId}--${roleId}--${positionId}">
+      //    ${optionsHTML}
+      //  </select>
+      //`;
       li.innerHTML = `
         <button type="button" class="btn p-0 position-close-button bg-secondary" aria-label="Close" onclick="removeElement(this)">&times;</button>
         <label>position ${currentPositions}: </label>
         <select name="position--${eventId}--${roleId}--${positionId}">
-          ${optionsHTML}
+        <option value="" selected>
+          None
+        </option>
         </select>
       `;
       const addPosContainer = btn.parentElement;
