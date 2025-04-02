@@ -24,7 +24,14 @@
                 - {{ signed_names | join(" and ") }} is already signed up!
               {% endif %}
             </div>
-            <button class="btn btn-sm btn-primary" onclick="showVolunteerModal('{{ role.role_id }}')">Sign Up / Quit</button>
+            <button class="btn btn-sm btn-primary" 
+              data-bs-toggle="modal" 
+              data-bs-target="#volunteerModal" 
+              data-role-id="{{ role.role_id }}"
+              data-signedup="{{ 'true' if signed_names|length > 0 else 'false' }}">
+              Sign Up / Quit
+            </button>
+
           </li>
         {% endfor %}
       </ul>
@@ -32,22 +39,30 @@
   {% endfor %}
 </div>
 
-<!-- Modal Popup for Volunteer Sign-Up -->
-<div class="modal-overlay" id="volunteerModal">
-  <div class="modal-content">
-    <h4 class="mb-3">Select Volunteer</h4>
-    <div id="volunteerOptions">
-      {# Volunteer buttons will be injected here via JavaScript #}
+<!-- Bootstrap Modal for Volunteer Sign-Up -->
+<div class="modal fade" id="volunteerModal" tabindex="-1" aria-labelledby="volunteerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="volunteerModalLabel">Select Volunteer</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="volunteerOptions" class="d-grid gap-2">
+          {# Volunteer option buttons will be injected here by JavaScript #}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
     </div>
-    <button class="btn btn-secondary mt-3" onclick="closeVolunteerModal()">Cancel</button>
   </div>
 </div>
 
-<!-- jQuery for simplicity -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- JavaScript -->
 <script>
   // Parent info is passed from the backend via Jinja.
-  // We expect parent_info to have keys: parent_id, parent_1_name, is_parent_1_volunteering, parent_2_name, is_parent_2_volunteering.
+  // Expected keys: parent_id, parent_1_name, is_parent_1_volunteering, parent_2_name, is_parent_2_volunteering.
   var parentInfo = {
     parent_id: {{ parent_info.parent_id }},
     parent1: "{{ parent_info.parent_1_name }}",
@@ -56,36 +71,47 @@
     parent2_vol: {{ "true" if parent_info.is_parent_2_volunteering else "false" }}
   };
 
-  // Current role for which volunteer modal is open.
   var currentRoleId = null;
+  
+  // Listen for when the modal is shown using Bootstrap's event.
+  var volunteerModalEl = document.getElementById('volunteerModal');
+  volunteerModalEl.addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    currentRoleId = button.getAttribute('data-role-id');
+    // "true" if the user is already signed up for this role; "false" otherwise.
+    var signedUp = button.getAttribute('data-signedup'); 
 
-  // Show the modal and populate volunteer buttons.
-  function showVolunteerModal(roleId) {
-    currentRoleId = roleId;
     var optionsHtml = "";
     
-    // Parent 1 option, only if volunteering is enabled.
+    // Parent 1 option.
     if (parentInfo.parent1_vol === true || parentInfo.parent1_vol === "true") {
-      optionsHtml += '<button class="btn btn-volunteer-active" onclick="volunteerAction(' + roleId + ', ' + parentInfo.parent_id + ', \'' + parentInfo.parent1 + '\', true)">Sign up as ' + parentInfo.parent1 + '</button>';
+      if (signedUp === "true") {
+        optionsHtml += '<button class="btn btn-danger" onclick="volunteerAction(' + currentRoleId + ', ' + parentInfo.parent_id + ', \'' + parentInfo.parent1 + '\', false)">'
+          + parentInfo.parent1 + ' will quit the event</button>';
+      } else {
+        optionsHtml += '<button class="btn btn-primary" onclick="volunteerAction(' + currentRoleId + ', ' + parentInfo.parent_id + ', \'' + parentInfo.parent1 + '\', true)">'
+          + 'Sign up as ' + parentInfo.parent1 + ' for the event</button>';
+      }
     } else {
-      optionsHtml += '<button class="btn btn-volunteer-inactive" disabled>' + parentInfo.parent1 + ' (not volunteering)</button>';
+      optionsHtml += '<button class="btn btn-secondary" disabled>' + parentInfo.parent1 + ' (not volunteering)</button>';
     }
+    
     // Parent 2 option, if available.
     if (parentInfo.parent2 && (parentInfo.parent2_vol === true || parentInfo.parent2_vol === "true")) {
-      optionsHtml += '<button class="btn btn-volunteer-active" onclick="volunteerAction(' + roleId + ', ' + parentInfo.parent_id + ', \'' + parentInfo.parent2 + '\', true)">Sign up as ' + parentInfo.parent2 + '</button>';
+      if (signedUp === "true") {
+        optionsHtml += '<button class="btn btn-danger" onclick="volunteerAction(' + currentRoleId + ', ' + parentInfo.parent_id + ', \'' + parentInfo.parent2 + '\', false)">'
+          + parentInfo.parent2 + ' will quit the event</button>';
+      } else {
+        optionsHtml += '<button class="btn btn-primary" onclick="volunteerAction(' + currentRoleId + ', ' + parentInfo.parent_id + ', \'' + parentInfo.parent2 + '\', true)">'
+          + 'Sign up as ' + parentInfo.parent2 + ' for the event</button>';
+      }
     } else if (parentInfo.parent2) {
-      optionsHtml += '<button class="btn btn-volunteer-inactive" disabled>' + parentInfo.parent2 + ' (not volunteering)</button>';
+      optionsHtml += '<button class="btn btn-secondary" disabled>' + parentInfo.parent2 + ' (not volunteering)</button>';
     }
     
     $("#volunteerOptions").html(optionsHtml);
-    $("#volunteerModal").fadeIn();
-  }
-
-  function closeVolunteerModal() {
-    $("#volunteerModal").fadeOut();
-  }
-
-  // Function to handle the AJAX POST when a volunteer button is clicked.
+  });
+  
   function volunteerAction(roleId, parentId, volunteerName, signingUp) {
     var data = {
       role_id: parseInt(roleId),
@@ -99,14 +125,15 @@
       contentType: "application/json",
       data: JSON.stringify(data),
       success: function(response) {
-        // For simplicity, reload the page after success.
         location.reload();
       },
       error: function(xhr, status, error) {
         alert("An error occurred: " + error);
       }
     });
-    closeVolunteerModal();
+    // Hide the modal using Bootstrap's modal API.
+    var modalInstance = bootstrap.Modal.getInstance(volunteerModalEl);
+    modalInstance.hide();
   }
 </script>
 {% endblock %}
