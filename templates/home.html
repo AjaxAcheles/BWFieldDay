@@ -8,50 +8,66 @@
 
 {% block content %}
 <div class="container-fluid pt-5 mt-5">
-  <h1 class="mb-5 text-center fs-1">asdhfl</h1>
-  <!--begining of math row-->
-  <div class="row mb-5 pb-5">
-    <div class="col-lg-1 col-2"></div><!--for spacing-->
+  <!-- Bootstrap Carousel -->
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div id="fieldDayCarousel" class="carousel slide" data-bs-ride="carousel">
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+          <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+          <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+        </div>
+        
+        <!-- Carousel Items -->
+        <div class="carousel-inner rounded shadow">
 
-    <!--begining of math photo col-->
-    <div class="col-lg-5 d-none d-lg-block">
-      <img class="rounded img-full-x" src="{{url_for('static', filename='GroupOnBridge.jpg')}}">
-    </div><!--end of math photo col-->
+          <div class="carousel-item active">
+            <img src="{{url_for('static', filename='FD2023groupphoto.jpg')}}" class="d-block w-100" alt="Field Day Event">
+          </div>
 
-    <!--begining of math text col-->
-    <div class="col-lg-5 col-8">
-      <p class="fs-4 text-start">
-        jskdal ahsjdklf huioo hajskldf hwej
-      </p>
-    </div><!--end of math text-->
+          <div class="carousel-item">
+            <img src="{{url_for('static', filename='caitlynlogan.jpg')}}" class="d-block w-100" alt="Field Day Event">
+          </div>
 
-    <div class="col-lg-1 col-2"></div><!--for spacing-->
-  </div> <!--end of math row-->
+          <div class="carousel-item">
+            <img src="{{url_for('static', filename='momsgroupphoto.jpg')}}" class="d-block w-100" alt="Field Day Event">
+          </div>
 
+          <div class="carousel-item">
+            <img src="{{url_for('static', filename='solefreerunningbackflip.jpg')}}" class="d-block w-100" alt="Field Day Event">
+          </div>
 
+          <div class="carousel-item">
+            <img src="{{url_for('static', filename='westonspongerace.jpg')}}" class="d-block w-100" alt="Field Day Event">
+          </div>
 
-  <h1 class="pt-5 my-5 text-center fs-1">shadjkfle</h1>
-  <div class="row mb-5 pb-5">
-    <div class="col-lg-1 col-2"></div><!--for spacing-->
-
-    <!--begining of coding text col-->
-    <div class="col-lg-5 col-8">
-      <p class="fs-4 text-end">
-        ahsjkdfasdfasdf adhjfk hjaweu ansmjdk asjdlfh hweu hajklsd
-      </p>
-    </div><!--end of coding text-->
-
-
-    <!--begining of coding photo col-->
-    <div class="col-lg-5 d-none d-lg-block">
-      <img class="rounded img-full-x" src="{{url_for('static', filename='Waterfall.jpg')}}">
-    </div><!--end of coding photo col-->
-
-    <div class="col-lg-1 col-2"></div><!--for spacing-->
-  </div> <!--end of coding row-->
-
-
+          <div class="carousel-item">
+            <img src="{{url_for('static', filename='tugofwar.jpg')}}" class="d-block w-100" alt="Field Day Event">
+          </div>
+        </div>
+        
+        
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#fieldDayCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#fieldDayCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      
+      <!-- Optional: Additional content below the carousel -->
+      <div class="mt-4 text-center">
+        <h2>Join Us for Brunswick Field Day</h2>
+        <p class="lead">A day of fun, games, and community spirit!</p>
+      </div>
+    </div>
+  </div>
 </div><!--end of fluid container-->
 {% endblock %}
-
-
