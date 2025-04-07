@@ -11,6 +11,7 @@
   <!-- Bootstrap Carousel -->
   <div class="row justify-content-center">
     <div class="col-md-10">
+      
       <div id="fieldDayCarousel" class="carousel slide" data-bs-ride="carousel">
         <!-- Carousel Indicators -->
         <div class="carousel-indicators">
@@ -20,11 +21,11 @@
           <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
           <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
           <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+          <button type="button" data-bs-target="#fieldDayCarousel" data-bs-slide-to="6" aria-label="Slide 7"></button>
         </div>
         
         <!-- Carousel Items -->
         <div class="carousel-inner rounded shadow">
-
           <div class="carousel-item active">
             <img src="{{url_for('static', filename='FD2023groupphoto.jpg')}}" class="d-block w-100" alt="Field Day Event">
           </div>
@@ -48,10 +49,13 @@
           <div class="carousel-item">
             <img src="{{url_for('static', filename='tugofwar.jpg')}}" class="d-block w-100" alt="Field Day Event">
           </div>
+          
+          <div class="carousel-item">
+            <img src="{{url_for('static', filename='obsticalcourse.jpg')}}" class="d-block w-100" alt="Field Day Event">
+          </div>
         </div>
         
-        
-        <!-- Carousel Controls -->
+        <!-- Standard Carousel Controls (can be kept or removed) -->
         <button class="carousel-control-prev" type="button" data-bs-target="#fieldDayCarousel" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Previous</span>
@@ -66,6 +70,8 @@
       <div class="mt-4 text-center">
         <h2>Join Us for Brunswick Field Day</h2>
         <p class="lead">A day of fun, games, and community spirit!</p>
+        <p class="lead">Sign up today!</p>
+        <button class="btn btn-primary" type="button"><a class="text-white" href="{{url_for('auth.register')}}">Sign Up</a></button>
       </div>
     </div>
   </div>
