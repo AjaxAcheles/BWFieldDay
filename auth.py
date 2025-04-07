@@ -19,7 +19,8 @@ auth_bp = Blueprint('auth', __name__)
 def register():
     if request.method == "GET":
         t_shirt_sizes = get_t_shirt_sizes_from_admin_info()
-        return render_template_with_session("register.html", t_shirt_sizes=t_shirt_sizes)
+        should_enable_t_shirt_orders = get_value_from_admin_info("enable_t_shirt_orders")[0].strip().lower() == "true"
+        return render_template_with_session("register.html", t_shirt_sizes=t_shirt_sizes, should_enable_t_shirt_orders=should_enable_t_shirt_orders)
     
     elif request.method == "POST":
         parent_1_name = request.form.get("parent-1-name").lower()

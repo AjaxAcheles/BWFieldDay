@@ -7,4 +7,14 @@
             <p class="m-0 p-0 text-center">{{t_shirt_size}}:    {{all_t_shirts[t_shirt_size]}}</p>
         {% endfor %}
     </div>
+    
+    <form method="POST" action="{{ url_for('admin.manage_t_shirts') }}" class="text-center mt-3">
+        <label>Do you want to enable t-shirt orders?</label>
+        <select name="enable-t-shirt-orders">
+            <option value="true" {% if should_enable_t_shirt_orders %}selected{% endif%}>Yes</option>
+            <option value="false" {% if not should_enable_t_shirt_orders %}selected{% endif%}>No</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    
 {% endblock %}

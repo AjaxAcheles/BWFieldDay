@@ -6,7 +6,6 @@
     <form method="POST" action="{{ url_for('volunteers.event_manager') }}">
       <ul class="list-group text-start" id="event-list">
         {# Loop over existing events passed from the backend #}
-        {{ events }}
         {% for event in events %}
         <li class="list-group-item text-capitalize bg-light event-container" id="event-{{ event.event_id }}">
           <!-- Close button to remove event -->

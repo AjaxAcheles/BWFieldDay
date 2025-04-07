@@ -73,20 +73,30 @@ def dashboard():
 @admin_bp.route("/admin_t_shirt_management", methods=['GET', 'POST'])
 @admin_login_required
 def manage_t_shirts():
-    parent_t_shirts = get_parent_t_shirts()
-    child_t_shirts = get_child_t_shirts()
-    t_shirt_sizes = get_t_shirt_sizes_from_admin_info()
-    flattened_parent_t_shirts = [size for sublist in parent_t_shirts for size in sublist]
-    flattened_child_t_shirts = [size for sublist in child_t_shirts for size in sublist]
-    all_t_shirts = {}
-    for t_shirt_size in t_shirt_sizes:
-        # count how many times t_shirt_size appears in both parent_t_shirts and child_t_shirts
-        # then add them in a counter to all_t_shirts. example result should look like this. all_t_shirts = {"XL": 2, "L": 1, "M": 0}
-        count_in_parents = flattened_parent_t_shirts.count(t_shirt_size)
-        count_in_children = flattened_child_t_shirts.count(t_shirt_size)
-        all_t_shirts[t_shirt_size] = count_in_parents + count_in_children
+    if request.method == "GET":
+        parent_t_shirts = get_parent_t_shirts()
+        child_t_shirts = get_child_t_shirts()
+        t_shirt_sizes = get_t_shirt_sizes_from_admin_info()
+        flattened_parent_t_shirts = [size for sublist in parent_t_shirts for size in sublist]
+        flattened_child_t_shirts = [size for sublist in child_t_shirts for size in sublist]
+        all_t_shirts = {}
+        for t_shirt_size in t_shirt_sizes:
+            # count how many times t_shirt_size appears in both parent_t_shirts and child_t_shirts
+            # then add them in a counter to all_t_shirts. example result should look like this. all_t_shirts = {"XL": 2, "L": 1, "M": 0}
+            count_in_parents = flattened_parent_t_shirts.count(t_shirt_size)
+            count_in_children = flattened_child_t_shirts.count(t_shirt_size)
+            all_t_shirts[t_shirt_size] = count_in_parents + count_in_children
 
-    return render_template_with_session("admin_t_shirt_management.html", all_t_shirts=all_t_shirts)
+        should_enable_t_shirt_orders = get_value_from_admin_info("enable_t_shirt_orders")[0].strip().lower() == "true"
+        return render_template_with_session("admin_t_shirt_management.html", all_t_shirts=all_t_shirts, should_enable_t_shirt_orders=should_enable_t_shirt_orders)
+    
+    elif request.method == "POST":
+        should_enable_t_shirt_orders = request.form.get("enable-t-shirt-orders").strip().lower() == "true"
+        old_enable_t_shirt_orders = get_value_from_admin_info("enable_t_shirt_orders")[0].strip().lower() == "true"
+        if should_enable_t_shirt_orders != old_enable_t_shirt_orders:
+            edit_all_keys_in_admin_table("enable_t_shirt_orders", should_enable_t_shirt_orders)
+        print(should_enable_t_shirt_orders, old_enable_t_shirt_orders, get_value_from_admin_info("enable_t_shirt_orders")[0].strip().lower() == "true")
+        return redirect(url_for("admin.manage_t_shirts"))
 
 
 @admin_bp.route("/admin_manage_or_add_admins", methods=['GET', 'POST'])
@@ -125,6 +135,7 @@ def manage_admins():
             else:
                 remove_admin_blind(email)
                 flash(f"Admin account removed successfully!", "message")
+                return redirect(url_for("admin.manage_admins"))
 
 
 

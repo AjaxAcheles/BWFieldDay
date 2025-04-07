@@ -51,8 +51,9 @@ def create_admin_info_table(current_admin_info=None):
                 """)
     connection.commit()
     if sql.execute("SELECT * FROM admin_info").fetchall() == []:
-        insert_into_event_table("events", {"Empty Event": {"Empty Position": 1}})
+        insert_into_event_table("events", {"Empty Event": {"Empty Position": 1}}) #this is a usleless line of code
         insert_into_event_table("t_shirt_sizes", ["Youth S", "Youth M", "Youth L", "Youth XL", "XS", "S", "M", "L", "XL", "XXL", "XXXL"])
+        insert_into_event_table("enable_t_shirt_orders", True)
         if current_admin_info is None:
             insert_into_event_table("admin", {"email": "imargo4507@outlook.com", "password": "imargo4507"})
             insert_into_event_table("admin", {"email": "huiwon1280@hotmail.com", "password": "huiwon1280"})
@@ -218,6 +219,11 @@ def insert_into_event_table(key, value):
     sql.execute("INSERT INTO admin_info (key, value) VALUES (?, ?)", (key, json.dumps(value)))
     connection.commit()
 
+def edit_all_keys_in_admin_table(key, value):
+    connection = get_db()
+    sql = connection.cursor()
+    sql.execute("UPDATE admin_info SET value = ? WHERE key = ?", (json.dumps(value), key))
+    connection.commit()
 
 def insert_parent_info(parent_1_name, parent_email, parent_phone_number, parent_1_t_shirt_size, is_parent_1_volunteering, parent_2_name, parent_2_t_shirt_size, is_parent_2_volunteering, number_of_children):
     connection = get_db()

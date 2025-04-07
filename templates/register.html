@@ -3,6 +3,13 @@
 {% block heading %}
     <h1>BW Field Day Registration</h1>
     <p>Please fill out the form below to register for BW Field Day.</p>
+    {% if not should_enable_t_shirt_orders %}
+    <div class="alert alert-danger m-5" role="alert">
+        <p class="h3 my-3 fw-normal text-danger">T-shirt orders are currently <b>DISABLED</b>.</p>
+        <p class="h6 my-3 fw-normal text-danger">This means that all t-shirt orders done through <b>this website</b> will NOT be processed.</p>
+        <p class="h6 my-3 fw-normal text-danger">Please contact the event coordinator for more information.</p>
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% block content %}

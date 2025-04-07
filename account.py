@@ -23,7 +23,8 @@ def edit_info():
         parent_info = get_parent_info_with_parent_id(session["parent_id"])
         children_info = get_children_info_with_parent_id(session["parent_id"])
         t_shirt_sizes = get_t_shirt_sizes_from_admin_info()
-        return render_template_with_session("edit_info.html", parent_info=parent_info, children_info=children_info, t_shirt_sizes=t_shirt_sizes)
+        should_enable_t_shirt_orders = get_value_from_admin_info("enable_t_shirt_orders")[0].strip().lower() == "true"
+        return render_template_with_session("edit_info.html", should_enable_t_shirt_orders=should_enable_t_shirt_orders, parent_info=parent_info, children_info=children_info, t_shirt_sizes=t_shirt_sizes)
     
     elif request.method == 'POST':
         parent_1_name = request.form.get("parent-1-name").lower()
