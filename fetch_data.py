@@ -113,6 +113,50 @@ def get_child_t_shirts():
     t_shirts = sql.execute("SELECT child_t_shirt_size FROM child_info").fetchall()
     return t_shirts
 
+def get_children_by_age_group():
+    connection = get_db()
+    sql = connection.cursor()
+    children = {"0-3": None, "4-5": None, "6-7": None, "8-9": None, "10-11": None, "12-14": None, "15+": None}
+    for child in sql.execute("SELECT * FROM child_info").fetchall():
+        print(child)
+        if child[2] <= 3:
+            try:
+                children["0-3"] += (child[1], child[2])
+            except:
+                children["0-3"] = (child[1], child[2])
+        elif child[2] <= 5:
+            try:
+                children["4-5"] += (child[1], child[2])
+            except:
+                children["4-5"] = (child[1], child[2])
+        elif child[2] <= 7:
+            try:
+                children["6-7"] += (child[1], child[2])
+            except:
+                children["6-7"] = (child[1], child[2])
+        elif child[2] <= 9:
+            try:
+                children["8-9"] += (child[1], child[2])
+            except:
+                children["8-9"] = (child[1], child[2])
+        elif child[2] <= 11:
+            try:
+                children["10-11"] += (child[1], child[2])
+            except:
+                children["10-11"] = (child[1], child[2])
+        elif child[2] <= 14:
+            try:
+                children["12-14"] += (child[1], child[2])
+            except:
+                children["12-14"] = (child[1], child[2])
+        elif child[2] >= 15:
+            try:
+                children["15+"] += (child[1], child[2])
+            except:
+                children["15+"] = (child[1], child[2])
+                
+    return children
+    
 
 def get_child_info():
     connection = get_db()

@@ -67,7 +67,8 @@ def login():
 @admin_bp.route("/admin_dashboard", methods=['GET', 'POST'])
 @admin_login_required
 def dashboard():
-    return render_template_with_session('admin_dashboard.html')
+    children = get_children_by_age_group()
+    return render_template_with_session('admin_dashboard.html', children=children)
 
 
 @admin_bp.route("/admin_t_shirt_management", methods=['GET', 'POST'])
