@@ -11,7 +11,6 @@ volunteers_bp = Blueprint('volunteers', __name__)
 def event_manager():
     if request.method == 'POST':
         try:
-            print(dict(request.form))
             form_data = dict(request.form)
             
             # Track newly created IDs to map temporary IDs to real database IDs
@@ -183,7 +182,6 @@ def volunteer_management():
     if request.method == 'POST':
         # Get JSON data from AJAX request
         data = request.json
-        print(data)        
         
         role_id = data.get('role_id')
         parent_id = data.get('parent_id')

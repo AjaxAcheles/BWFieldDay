@@ -240,8 +240,6 @@ def toggle_position_with_volunteer_data(role_id, position_holder_name, parent_id
         if empty_position:
             position_id = empty_position['position_id']
             cursor.execute("UPDATE positions SET position_holder_name = ?, parent_id = ? WHERE position_id = ?", (position_holder_name, parent_id, position_id))
-        else:
-            print(empty_position)
     connection.commit()
     connection.close()
     
@@ -360,5 +358,4 @@ def get_all_tables():
     for table in tables:
         rows = sql.execute("SELECT * FROM " + table).fetchall()
         database_dict[table] = rows
-    print(database_dict)
     return database_dict

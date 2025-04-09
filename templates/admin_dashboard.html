@@ -9,14 +9,14 @@
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header">
-                    {{age_group}}
+                    <h5 class="card-title">{{ age_group }}</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        {% for name, age in child %}
-                        <li class="list-group-item">{{name}} ({{age}})</li>
-                        {% endfor %}
-                    </ul>
+                    {% if child %}
+                    <p class="card-text">{{child[0]}} - {{child[1]}}</p>
+                    {% else %}
+                    <p class="card-text">No children in this age group</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
