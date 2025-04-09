@@ -96,7 +96,6 @@ def manage_t_shirts():
         old_enable_t_shirt_orders = get_value_from_admin_info("enable_t_shirt_orders")[0].strip().lower() == "true"
         if should_enable_t_shirt_orders != old_enable_t_shirt_orders:
             edit_all_keys_in_admin_table("enable_t_shirt_orders", should_enable_t_shirt_orders)
-        print(should_enable_t_shirt_orders, old_enable_t_shirt_orders, get_value_from_admin_info("enable_t_shirt_orders")[0].strip().lower() == "true")
         return redirect(url_for("admin.manage_t_shirts"))
 
 

@@ -1,6 +1,8 @@
 {% extends "admin_layout.html" %} {% set page_title="Dashboard" %}
 
 {% block content %}
+    {% set children = {'0-3': [['micah brown', 2], ['crue childress', 3], ['madalyn seltzer', 2]], '4-5': [['sutton', 5], ['jayla ', 4], ['fredrick lisinski', 5], ['emmalynn moore', 4], ['cora', 4]], '6-7': [['archer', 7], ['ethan jessup', 7], ['maverick brown', 6], ['max mitchell', 7], ['sam mitchell', 7], ['jaxon', 6], ['levi', 7], ['jennilee moore', 6], ['logan ', 7], ['cali', 7], ['frankie', 7], ['liam ', 7]], '8-9': [['lanah', 8], ['jett bolton', 9], ['madeline brown', 9], ['jett childress', 8], ['maddie ', 9], ['annelise lisinski', 9]], '10-11': [['micah', 11], ['autumn richardson', 11], ['bryn', 10], ['tula bolton ', 10], ['stella childress', 10], ['noah armstrong ', 10], ['owen mitchell', 10], ['levi lentz', 11], ['luke ', 11], ['andy dale', 10], ['abraham stclair', 11], ['conner ', 
+    10], ['evie', 10], ['sean', 11]], '12-14': [['noah', 14], ['david brewer', 13], ['derrick brewer', 13], ['chase grevin', 13], ['clayton armstrong ', 12], ['eli', 12], ['langston webb', 14], ['abbi guterl', 12], ['gavin', 12], ['lilah', 13], ['colin', 12]], '15+': [['jonah', 18], ['lacey', 15], ['emily stclair', 16], ['lizzie stclair', 15], ['manny webb', 16], ['sam', 16], ['ethan', 15]]} %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
     </div>
@@ -9,14 +11,14 @@
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header">
-                    {{age_group}}
+                    <h5 class="card-title">{{ age_group }}</h5>
                 </div>
                 <div class="card-body">
-                    {% if child %}
-                    <p class="card-text">{{child[0]}} - {{child[1]}}</p>
-                    {% else %}
-                    <p class="card-text">No children in this age group</p>
-                    {% endif %}
+                    <ul class="list-group list-group-flush">
+                        {% for name, age in child %}
+                        <li class="list-group-item">{{ name }} ({{ age }})</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
