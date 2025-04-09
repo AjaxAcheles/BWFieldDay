@@ -131,10 +131,7 @@ def get_children_by_age_group():
         elif child[2] <= 14:
             children["12-14"].append([child[1], child[2]])
         elif child[2] >= 15:
-            try:
-                children["15+"] += (child[1], child[2])
-            except:
-                children["15+"] = (child[1], child[2])
+            children["15+"].append([child[1], child[2]])
                 
     return children
     

@@ -5,18 +5,19 @@
         <h1 class="h2">Dashboard</h1>
     </div>
     <div class="row">
-        {% for age_group, child in children.items() %}
+        {% for age_group, group_of_children in children.items() %}
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="card-title">{{ age_group }}</h5>
                 </div>
                 <div class="card-body">
-                    {% if child %}
-                    <p class="card-text">{{child[0]}} - {{child[1]}}</p>
-                    {% else %}
-                    <p class="card-text">No children in this age group</p>
-                    {% endif %}
+                    <ul class="list-group list-group-flush">
+                        {% for child in group_of_children %}
+                        <p>{{child[0]}} ({{child[1]}})</p>
+                        {% endfor %}
+                        
+                    </ul>
                 </div>
             </div>
         </div>

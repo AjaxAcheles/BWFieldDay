@@ -68,6 +68,7 @@ def login():
 @admin_login_required
 def dashboard():
     children = get_children_by_age_group()
+    print(children)
     return render_template_with_session('admin_dashboard.html', children=children)
 
 
